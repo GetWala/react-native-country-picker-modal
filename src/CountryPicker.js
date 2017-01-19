@@ -65,8 +65,9 @@ export default class CountryPicker extends Component {
     });
   }
 
-    componentWillReceiveProps(nextProps) {
-    let items = nextProps.requiredCountries;
+    componentWillMount() {
+      console.log('this is running')
+    let items = this.props.requiredCountries;
 
     if (items) {
       this.setState({
