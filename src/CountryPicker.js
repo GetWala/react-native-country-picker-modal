@@ -40,7 +40,7 @@ export default class CountryPicker extends Component {
     onChange: React.PropTypes.func.isRequired,
     closeable: React.PropTypes.bool,
     children: React.PropTypes.node,
-    requiredCountries:React.PropTypes.array.isRequired
+    requiredCountries: React.PropTypes.array.isRequired
   }
   static defaultProps = {
     translation: 'eng',
@@ -65,14 +65,24 @@ export default class CountryPicker extends Component {
     });
   }
 
-    componentWillMount() {
-      console.log('this is running')
+  componentWillMount() {
     let items = this.props.requiredCountries;
 
     if (items) {
       this.setState({
         dataSource: ds.cloneWithRows(items)
       });
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.requiredCountries.length !== this.props.requiredCountries.length) {
+      let items = nextProps.requiredCountries;
+      if (items) {
+        this.setState({
+          dataSource: ds.cloneWithRows(items)
+        });
+      }
     }
   }
 
@@ -124,7 +134,7 @@ export default class CountryPicker extends Component {
         key={index}
         onPress={() => this.onSelectCountry(country)}
         activeOpacity={0.99}
-      >
+        >
         {this.renderCountryDetail(country)}
       </TouchableOpacity>
     );
@@ -136,7 +146,7 @@ export default class CountryPicker extends Component {
         key={index}
         onPress={() => this.scrollTo(letter)}
         activeOpacity={0.6}
-      >
+        >
         <View style={styles.letter}>
           <Text style={styles.letterText}>{letter}</Text>
         </View>
@@ -160,7 +170,7 @@ export default class CountryPicker extends Component {
 
   static renderEmojiFlag(cca2, emojiStyle) {
     return (
-      <Text style={[ styles.emojiFlag, emojiStyle ]}>
+      <Text style={[styles.emojiFlag, emojiStyle]}>
         <Emoji name={countries[cca2].flag} />
       </Text>
     );
@@ -169,15 +179,15 @@ export default class CountryPicker extends Component {
   static renderImageFlag(cca2, imageStyle) {
     return (
       <Image
-        style={[ styles.imgStyle, imageStyle ]}
+        style={[styles.imgStyle, imageStyle]}
         source={{ uri: countries[cca2].flag }}
-      />
+        />
     );
   }
 
   static renderFlag(cca2, itemStyle, emojiStyle, imageStyle) {
     return (
-      <View style={[ styles.itemCountryFlag, itemStyle ]}>
+      <View style={[styles.itemCountryFlag, itemStyle]}>
         {isEmojiable ? CountryPicker.renderEmojiFlag(cca2, emojiStyle) : CountryPicker.renderImageFlag(cca2, imageStyle)}
       </View>
     );
@@ -192,7 +202,7 @@ export default class CountryPicker extends Component {
           {
             this.props.children ?
               this.props.children
-            :
+              :
               (<View style={styles.touchFlag}>
                 {CountryPicker.renderFlag(this.props.cca2)}
               </View>)
@@ -201,11 +211,11 @@ export default class CountryPicker extends Component {
         <Modal
           visible={this.state.modalVisible}
           onRequestClose={() => this.setState({ modalVisible: false })}
-        >
+          >
           <View style={styles.modalContainer}>
             {
               this.props.closeable &&
-                <CloseButton onPress={() => this.setState({ modalVisible: false })} />
+              <CloseButton onPress={() => this.setState({ modalVisible: false })} />
             }
             <ListView
               contentContainerStyle={styles.contentContainer}
@@ -217,7 +227,7 @@ export default class CountryPicker extends Component {
               onLayout={
                 ({ nativeEvent: { layout: { y: offset } } }) => this.setVisibleListHeight(offset)
               }
-            />
+              />
             <View style={styles.letters}>
               {this.letters.map((letter, index) => this.renderLetters(letter, index))}
             </View>
