@@ -1,6 +1,6 @@
 {
   "name": "react-native-country-picker-modal",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "description": "Country picker",
   "main": "src/CountryPicker.js",
   "repository": {
