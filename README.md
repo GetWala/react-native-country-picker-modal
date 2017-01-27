@@ -1,4 +1,4 @@
-# react-native-country-picker-modal made by team WALA
+# react-native-country-picker-modal
 
 The best Country Picker for React Native.
 
