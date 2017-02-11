@@ -12,8 +12,7 @@ export default StyleSheet.create({
     backgroundColor: 'white',
   },
   touchFlag: {
-    alignItems: 'center',
-    justifyContent: 'center',
+
   },
   imgStyle: {
     resizeMode: 'contain',
@@ -31,6 +30,44 @@ export default StyleSheet.create({
     height: 30,
     borderWidth: 1 / PixelRatio.get(),
     borderColor: 'transparent',
+  },
+  selectorControl: {
+    flexDirection: 'row',
+    height: 65,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingRight: 13,
+    position: 'relative'
+  },
+  selectorCountryFlag: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 65,
+    width: 65,
+  },
+  selectorCountryFlagImage: {
+    resizeMode: 'contain',
+    width: 39,
+    height: 30,
+    borderWidth: 1 / PixelRatio.get(),
+    borderColor: '#f3f4f5'
+  },
+  selectorCountryName: {
+    justifyContent: 'center',
+    width: getWidthPercent(100),
+    height: 39,
+    borderBottomWidth: 1,
+    borderColor: '#f3f4f5'
+  },
+  selectorCountryNameText: {
+    fontSize: 16,
+    color: '#4D5B67',
+    fontFamily: 'proximanova_extrabold'
+  },
+  selectorArrow: {
+    position: 'absolute',
+    right: 13,
+    top: 23
   },
   itemCountry: {
     flexDirection: 'row',
