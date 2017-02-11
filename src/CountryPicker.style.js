@@ -34,9 +34,11 @@ export default StyleSheet.create({
   },
   itemCountry: {
     flexDirection: 'row',
-    height: getHeightPercent(7),
+    height: 52,
     justifyContent: 'flex-start',
     alignItems: 'center',
+    borderBottomWidth: 1,
+    borderColor: '#f3f4f5'
   },
   itemCountryFlag: {
     justifyContent: 'center',
@@ -47,20 +49,20 @@ export default StyleSheet.create({
   itemCountryName: {
     justifyContent: 'center',
     width: getWidthPercent(70),
-    borderBottomWidth: 2 / PixelRatio.get(),
-    borderBottomColor: '#ccc',
     height: getHeightPercent(7),
   },
   countryName: {
-    fontSize: getHeightPercent(2.2),
+    fontSize: 16,
+    color: '#919BA0',
+    fontFamily: 'proximanova_regular'
   },
   letters: {
     position: 'absolute',
     height: getHeightPercent(100),
-    top: 0,
+    top: 13,
     bottom: 0,
     right: 10,
-    backgroundColor: 'transparent',
+    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -73,5 +75,6 @@ export default StyleSheet.create({
   letterText: {
     textAlign: 'center',
     fontSize: getHeightPercent(2.2),
+    fontFamily: 'proximanova_regular'
   },
 });

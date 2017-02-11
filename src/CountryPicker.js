@@ -228,9 +228,13 @@ export default class CountryPicker extends Component {
                 ({ nativeEvent: { layout: { y: offset } } }) => this.setVisibleListHeight(offset)
               }
               />
-            <View style={styles.letters}>
-              {this.letters.map((letter, index) => this.renderLetters(letter, index))}
-            </View>
+            {
+              /*
+               <View style={styles.letters}>
+               {this.letters.map((letter, index) => this.renderLetters(letter, index))}
+               </View>
+               */
+            }
           </View>
         </Modal>
       </View>
