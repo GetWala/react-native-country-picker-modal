@@ -67,8 +67,10 @@ export default class CountryPicker extends Component {
 
   componentWillMount() {
     let items = this.props.requiredCountries;
-
     if (items) {
+      items = _.sortBy(items, function(cca2){
+        return this.getCountryName(countries[cca2]);
+      });
       this.setState({
         dataSource: ds.cloneWithRows(items)
       });
