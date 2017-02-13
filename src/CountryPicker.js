@@ -67,8 +67,10 @@ export default class CountryPicker extends Component {
 
   componentWillMount() {
     let items = this.props.requiredCountries;
-
     if (items) {
+      items = _.sortBy(items, function (cca2) {
+        return countries[cca2].name.common;
+      });
       this.setState({
         dataSource: ds.cloneWithRows(items)
       });
@@ -78,6 +80,9 @@ export default class CountryPicker extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.requiredCountries.length !== this.props.requiredCountries.length) {
       let items = nextProps.requiredCountries;
+      items = _.sortBy(items, function (cca2) {
+        return countries[cca2].name.common;
+      });
       if (items) {
         this.setState({
           dataSource: ds.cloneWithRows(items)
@@ -134,7 +139,7 @@ export default class CountryPicker extends Component {
         key={index}
         onPress={() => this.onSelectCountry(country)}
         activeOpacity={0.99}
-        >
+      >
         {this.renderCountryDetail(country)}
       </TouchableOpacity>
     );
@@ -146,7 +151,7 @@ export default class CountryPicker extends Component {
         key={index}
         onPress={() => this.scrollTo(letter)}
         activeOpacity={0.6}
-        >
+      >
         <View style={styles.letter}>
           <Text style={styles.letterText}>{letter}</Text>
         </View>
@@ -181,7 +186,7 @@ export default class CountryPicker extends Component {
       <Image
         style={[styles.imgStyle, imageStyle]}
         source={{ uri: countries[cca2].flag }}
-        />
+      />
     );
   }
 
@@ -227,7 +232,7 @@ export default class CountryPicker extends Component {
         <Modal
           visible={this.state.modalVisible}
           onRequestClose={() => this.setState({ modalVisible: false })}
-          >
+        >
           <View style={styles.modalContainer}>
             {
               this.props.closeable &&
@@ -242,8 +247,8 @@ export default class CountryPicker extends Component {
               pageSize={countries.length - 30}
               onLayout={
                 ({ nativeEvent: { layout: { y: offset } } }) => this.setVisibleListHeight(offset)
-              }
-              />
+              } />
+
             {
               /*
                <View style={styles.letters}>
