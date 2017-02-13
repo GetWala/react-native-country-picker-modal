@@ -69,7 +69,7 @@ export default class CountryPicker extends Component {
     let items = this.props.requiredCountries;
     if (items) {
       items = _.sortBy(items, function (cca2) {
-        return this.getCountryName(countries[cca2]);
+        return countries[cca2].name.common;
       });
       this.setState({
         dataSource: ds.cloneWithRows(items)
@@ -81,7 +81,7 @@ export default class CountryPicker extends Component {
     if (nextProps.requiredCountries.length !== this.props.requiredCountries.length) {
       let items = nextProps.requiredCountries;
       items = _.sortBy(items, function (cca2) {
-        return this.getCountryName(countries[cca2]);
+        return countries[cca2].name.common;
       });
       if (items) {
         this.setState({
