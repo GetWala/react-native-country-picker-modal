@@ -12,8 +12,7 @@ export default StyleSheet.create({
     backgroundColor: 'white',
   },
   touchFlag: {
-    alignItems: 'center',
-    justifyContent: 'center',
+
   },
   imgStyle: {
     resizeMode: 'contain',
@@ -32,11 +31,51 @@ export default StyleSheet.create({
     borderWidth: 1 / PixelRatio.get(),
     borderColor: 'transparent',
   },
-  itemCountry: {
+  selectorControl: {
     flexDirection: 'row',
-    height: getHeightPercent(7),
+    height: 65,
     justifyContent: 'flex-start',
     alignItems: 'center',
+    paddingRight: 13,
+    position: 'relative'
+  },
+  selectorCountryFlag: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 65,
+    width: 65,
+  },
+  selectorCountryFlagImage: {
+    resizeMode: 'contain',
+    width: 39,
+    height: 30,
+    borderWidth: 1 / PixelRatio.get(),
+    borderColor: '#f3f4f5'
+  },
+  selectorCountryName: {
+    justifyContent: 'center',
+    width: getWidthPercent(100),
+    height: 39,
+    borderBottomWidth: 1,
+    borderColor: '#f3f4f5'
+  },
+  selectorCountryNameText: {
+    fontSize: 16,
+    color: '#4D5B67',
+    fontFamily: 'proximanova_extrabold'
+  },
+  selectorArrow: {
+    position: 'absolute',
+    right: 13,
+    top: 23
+  },
+  itemCountry: {
+    flexDirection: 'row',
+    height: 52,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderColor: '#f3f4f5'
   },
   itemCountryFlag: {
     justifyContent: 'center',
@@ -47,20 +86,20 @@ export default StyleSheet.create({
   itemCountryName: {
     justifyContent: 'center',
     width: getWidthPercent(70),
-    borderBottomWidth: 2 / PixelRatio.get(),
-    borderBottomColor: '#ccc',
     height: getHeightPercent(7),
   },
   countryName: {
-    fontSize: getHeightPercent(2.2),
+    fontSize: 16,
+    color: '#919BA0',
+    fontFamily: 'proximanova_regular'
   },
   letters: {
     position: 'absolute',
     height: getHeightPercent(100),
-    top: 0,
+    top: 13,
     bottom: 0,
     right: 10,
-    backgroundColor: 'transparent',
+    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -73,5 +112,6 @@ export default StyleSheet.create({
   letterText: {
     textAlign: 'center',
     fontSize: getHeightPercent(2.2),
+    fontFamily: 'proximanova_regular'
   },
 });
