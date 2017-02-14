@@ -198,6 +198,22 @@ export default class CountryPicker extends Component {
     );
   }
 
+  static renderSelector(cca2, optionalTransalation) {
+    const transalation = optionalTransalation || CountryPicker.translation || 'eng';
+    const country_name = countries[cca2].name[transalation] || countries[cca2].name.common;
+    return (
+      <View style={styles.selectorControl}>
+        {CountryPicker.renderFlag(cca2, styles.selectorCountryFlag, '', styles.selectorCountryFlagImage)}
+        <View style={styles.selectorCountryName}>
+          <Text style={styles.selectorCountryNameText}>
+            {country_name}
+          </Text>
+        </View>
+        <Image source={require('./dropdownArrow.png')} style={styles.selectorArrow} />
+      </View>
+    );
+  }
+
   render() {
     return (
       <View>
@@ -209,7 +225,7 @@ export default class CountryPicker extends Component {
               this.props.children
               :
               (<View style={styles.touchFlag}>
-                {CountryPicker.renderFlag(this.props.cca2)}
+                {CountryPicker.renderSelector(this.props.cca2)}
               </View>)
           }
         </TouchableOpacity>
@@ -231,11 +247,15 @@ export default class CountryPicker extends Component {
               pageSize={countries.length - 30}
               onLayout={
                 ({ nativeEvent: { layout: { y: offset } } }) => this.setVisibleListHeight(offset)
-              }
-            />
-            <View style={styles.letters}>
-              {this.letters.map((letter, index) => this.renderLetters(letter, index))}
-            </View>
+              } />
+
+            {
+              /*
+               <View style={styles.letters}>
+               {this.letters.map((letter, index) => this.renderLetters(letter, index))}
+               </View>
+               */
+            }
           </View>
         </Modal>
       </View>
