@@ -40,7 +40,7 @@ export default class CountryPicker extends Component {
     onChange: React.PropTypes.func.isRequired,
     closeable: React.PropTypes.bool,
     children: React.PropTypes.node,
-    requiredCountries: React.PropTypes.array.isRequired
+    requiredCountries: React.PropTypes.array
   }
   static defaultProps = {
     translation: 'eng',
@@ -66,19 +66,21 @@ export default class CountryPicker extends Component {
   }
 
   componentWillMount() {
-    let items = this.props.requiredCountries;
-    if (items) {
-      items = _.sortBy(items, function (cca2) {
-        return countries[cca2].name.common;
-      });
-      this.setState({
-        dataSource: ds.cloneWithRows(items)
-      });
+    if (this.props.requiredCountries) {
+      let items = this.props.requiredCountries;
+      if (items) {
+        items = _.sortBy(items, function (cca2) {
+          return countries[cca2].name.common;
+        });
+        this.setState({
+          dataSource: ds.cloneWithRows(items)
+        });
+      }
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.requiredCountries.length !== this.props.requiredCountries.length) {
+    if (nextProps.requiredCountries && nextProps.requiredCountries.length !== this.props.requiredCountries.length) {
       let items = nextProps.requiredCountries;
       items = _.sortBy(items, function (cca2) {
         return countries[cca2].name.common;
