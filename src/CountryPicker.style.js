@@ -114,4 +114,20 @@ export default StyleSheet.create({
     fontSize: getHeightPercent(2.2),
     fontFamily: 'proximanova_regular'
   },
+  phoneSelector: {
+    height: 39,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center'
+  },
+  phoneSelectorFlag: {
+    marginRight: 13
+  },
+  phoneSelectorText: {
+    marginRight: 13,
+    paddingRight: 13
+  },
+  phoneSelectorArrow: {
+    paddingRight: 13
+  }
 });
