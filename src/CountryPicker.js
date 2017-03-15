@@ -37,6 +37,7 @@ export default class CountryPicker extends Component {
   static propTypes = {
     cca2: React.PropTypes.string.isRequired,
     phoneSelector: React.PropTypes.bool,
+    showLetters: React.PropTypes.bool,
     translation: React.PropTypes.string,
     onChange: React.PropTypes.func.isRequired,
     closeable: React.PropTypes.bool,
@@ -227,9 +228,6 @@ export default class CountryPicker extends Component {
         <View style={styles.phoneSelectorText}>
           <Text style={styles.selectorCountryNameText}>{'+ ' + country_code}</Text>
         </View>
-        <View style={styles.phoneSelectorArrow}>
-          <Image source={require('./dropdownArrow.png')} />
-        </View>
       </View>
     );
   }
@@ -270,11 +268,10 @@ export default class CountryPicker extends Component {
               } />
 
             {
-              /*
-               <View style={styles.letters}>
-               {this.letters.map((letter, index) => this.renderLetters(letter, index))}
-               </View>
-               */
+              this.props.showLetters &&
+              <View style={styles.letters}>
+                {this.letters.map((letter, index) => this.renderLetters(letter, index))}
+              </View>
             }
           </View>
         </Modal>

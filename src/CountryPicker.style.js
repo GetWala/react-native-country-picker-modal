@@ -124,7 +124,6 @@ export default StyleSheet.create({
     marginRight: 13
   },
   phoneSelectorText: {
-    marginRight: 13,
     paddingRight: 13
   },
   phoneSelectorArrow: {
