@@ -227,9 +227,6 @@ export default class CountryPicker extends Component {
         <View style={styles.phoneSelectorText}>
           <Text style={styles.selectorCountryNameText}>{'+ ' + country_code}</Text>
         </View>
-        <View style={styles.phoneSelectorArrow}>
-          <Image source={require('./dropdownArrow.png')} />
-        </View>
       </View>
     );
   }
