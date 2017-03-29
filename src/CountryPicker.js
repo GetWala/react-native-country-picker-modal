@@ -36,11 +36,13 @@ const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 export default class CountryPicker extends Component {
   static propTypes = {
     cca2: React.PropTypes.string.isRequired,
+    phoneSelector: React.PropTypes.bool,
+    showLetters: React.PropTypes.bool,
     translation: React.PropTypes.string,
     onChange: React.PropTypes.func.isRequired,
     closeable: React.PropTypes.bool,
     children: React.PropTypes.node,
-    requiredCountries: React.PropTypes.array.isRequired
+    requiredCountries: React.PropTypes.array
   }
   static defaultProps = {
     translation: 'eng',
@@ -66,19 +68,21 @@ export default class CountryPicker extends Component {
   }
 
   componentWillMount() {
-    let items = this.props.requiredCountries;
-    if (items) {
-      items = _.sortBy(items, function (cca2) {
-        return countries[cca2].name.common;
-      });
-      this.setState({
-        dataSource: ds.cloneWithRows(items)
-      });
+    if (this.props.requiredCountries) {
+      let items = this.props.requiredCountries;
+      if (items) {
+        items = _.sortBy(items, function (cca2) {
+          return countries[cca2].name.common;
+        });
+        this.setState({
+          dataSource: ds.cloneWithRows(items)
+        });
+      }
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.requiredCountries.length !== this.props.requiredCountries.length) {
+    if (nextProps.requiredCountries && nextProps.requiredCountries.length !== this.props.requiredCountries.length) {
       let items = nextProps.requiredCountries;
       items = _.sortBy(items, function (cca2) {
         return countries[cca2].name.common;
@@ -214,6 +218,20 @@ export default class CountryPicker extends Component {
     );
   }
 
+  static renderPhoneSelector(cca2, optionalTransalation) {
+    const country_code = countries[cca2].callingCode;
+    return (
+      <View style={styles.phoneSelector}>
+        <View style={styles.phoneSelectorFlag}>
+          {CountryPicker.renderImageFlag(cca2)}
+        </View>
+        <View style={styles.phoneSelectorText}>
+          <Text style={styles.selectorCountryNameText}>{'+ ' + country_code}</Text>
+        </View>
+      </View>
+    );
+  }
+
   render() {
     return (
       <View>
@@ -225,7 +243,7 @@ export default class CountryPicker extends Component {
               this.props.children
               :
               (<View style={styles.touchFlag}>
-                {CountryPicker.renderSelector(this.props.cca2)}
+                {this.props.phoneSelector ? CountryPicker.renderPhoneSelector(this.props.cca2) : CountryPicker.renderSelector(this.props.cca2)}
               </View>)
           }
         </TouchableOpacity>
@@ -250,11 +268,10 @@ export default class CountryPicker extends Component {
               } />
 
             {
-              /*
-               <View style={styles.letters}>
-               {this.letters.map((letter, index) => this.renderLetters(letter, index))}
-               </View>
-               */
+              this.props.showLetters &&
+              <View style={styles.letters}>
+                {this.letters.map((letter, index) => this.renderLetters(letter, index))}
+              </View>
             }
           </View>
         </Modal>

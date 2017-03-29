@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<alpha xmlns:android="http://schemas.android.com/apk/res/android"
-           android:duration="@android:integer/config_shortAnimTime"
-           android:interpolator="@android:anim/accelerate_interpolator"
-           android:fromAlpha="1.0"
-           android:toAlpha="0.0"
-  />
-<!-- From: file:/Users/DancesLikeSnake/Documents/Wala/App/React%20Native/react-native-country-picker-modal/android/app/build/intermediates/exploded-aar/com.facebook.react/react-native/0.32.0/res/anim/fade_out.xml -->
