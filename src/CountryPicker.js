@@ -242,8 +242,8 @@ export default class CountryPicker extends Component {
     let countriesFlat = _.values(countries);
     countriesFlat = _.map(countriesFlat, (country) => {
       let cca2;
-      let countryLookup = _.first(lookup.countries({"name":country.name.common}));
-      if(countryLookup){
+      let countryLookup = _.first(lookup.countries({ "name": country.name.common }));
+      if (countryLookup) {
         cca2 = countryLookup.alpha2
       }
       return {
@@ -258,6 +258,16 @@ export default class CountryPicker extends Component {
 
   updateCountriesOnSearch(searchResults) {
     items = _.map(searchResults, 'cca2');
+    items = _.compact(items);
+    let currentText = this.searchBar.getValue();
+
+    console.log('currentText', currentText);
+    if (currentText && items.length === 0) {
+
+      this.setState({ dataSource: ds.cloneWithRows(cca2List) });
+      return;
+
+    }
     console.log("items", items)
     if (items) {
       items = _.sortBy(items, function (cca2) {
@@ -293,15 +303,16 @@ export default class CountryPicker extends Component {
               this.props.closeable &&
               <CloseButton onPress={() => this.setState({ modalVisible: false })} />
             }
-            <SearchBar
-              ref={(ref) => this.searchBar = ref}
-              data={this.convertCountriesToArray()}
-              handleResults={(results) => {
-                this.updateCountriesOnSearch(results);
-                console.log('Country results', results);
-              }}
-              showOnLoad
-            />
+            <View style={{height: getHeightPercent(10)}}>
+              <SearchBar
+                ref={(ref) => this.searchBar = ref}
+                data={this.convertCountriesToArray()}
+                handleResults={(results) => {
+                  this.updateCountriesOnSearch(results);
+                }}
+                showOnLoad
+              />
+            </View>
             <ListView
               contentContainerStyle={styles.contentContainer}
               ref={listView => this._listView = listView}
