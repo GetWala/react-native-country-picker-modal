@@ -80,6 +80,8 @@ export default class CountryPicker extends Component {
         });
       }
     }
+    this.searchBar.show();
+    console.log('HERE');
   }
 
   componentWillReceiveProps(nextProps) {
