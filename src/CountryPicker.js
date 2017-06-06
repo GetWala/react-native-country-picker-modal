@@ -239,7 +239,7 @@ export default class CountryPicker extends Component {
 
   convertCountriesToArray(){
    let countriesFlat = _.values(countries);
-   countriesFlat = _.map(countries, (country) => {
+   countriesFlat = _.map(countriesFlat, (country) => {
      delete country.flag;
      return country;
    });
