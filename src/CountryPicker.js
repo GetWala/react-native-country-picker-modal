@@ -242,7 +242,7 @@ export default class CountryPicker extends Component {
     let countriesFlat = _.values(countries);
     countriesFlat = _.map(countriesFlat, (country) => {
       let cca2;
-      let countryLookup = _.first(lookup.countries({name:name}));
+      let countryLookup = _.first(lookup.countries({name:country.name.common}));
       if(countryLookup){
         cca2 = countryLookup.alpha2
       }
