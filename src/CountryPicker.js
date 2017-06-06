@@ -263,7 +263,7 @@ export default class CountryPicker extends Component {
             }
             <SearchBar
               ref={(ref) => this.searchBar = ref}
-              data={countries}
+              data={[countries]}
               handleResults={(results) => {
                 console.log('Country results', results);
               }}
