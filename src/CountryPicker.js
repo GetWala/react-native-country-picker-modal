@@ -297,6 +297,7 @@ export default class CountryPicker extends Component {
               ref={(ref) => this.searchBar = ref}
               data={this.convertCountriesToArray()}
               handleResults={(results) => {
+                this.updateCountriesOnSearch(results);
                 console.log('Country results', results);
               }}
               showOnLoad
