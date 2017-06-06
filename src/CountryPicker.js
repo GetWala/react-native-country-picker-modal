@@ -12,6 +12,7 @@ import cca2List from '../data/cca2';
 import { getHeightPercent } from './ratio';
 import CloseButton from './CloseButton';
 import styles from './CountryPicker.style';
+import SearchBar from 'react-native-searchbar'
 
 let countries = null;
 let Emoji = null;
@@ -256,6 +257,14 @@ export default class CountryPicker extends Component {
               this.props.closeable &&
               <CloseButton onPress={() => this.setState({ modalVisible: false })} />
             }
+            <SearchBar
+              ref={(ref) => this.searchBar = ref}
+              data={countries}
+              handleResults={(results) =>{
+                console.log('Country results', results);
+              } }
+              showOnLoad
+            />
             <ListView
               contentContainerStyle={styles.contentContainer}
               ref={listView => this._listView = listView}
