@@ -237,6 +237,15 @@ export default class CountryPicker extends Component {
     );
   }
 
+  convertCountriesToArray(){
+   let countriesFlat = _.values(countries);
+   countriesFlat = _.map(countries, (country) => {
+     delete country.flag;
+     return country;
+   });
+   return countriesFlat;
+  }
+
   render() {
     return (
       <View>
@@ -263,7 +272,7 @@ export default class CountryPicker extends Component {
             }
             <SearchBar
               ref={(ref) => this.searchBar = ref}
-              data={[countries]}
+              data={this.convertCountriesToArray()}
               handleResults={(results) => {
                 console.log('Country results', results);
               }}
