@@ -80,8 +80,6 @@ export default class CountryPicker extends Component {
         });
       }
     }
-    this.searchBar.show();
-    console.log('HERE');
   }
 
   componentWillReceiveProps(nextProps) {
@@ -94,6 +92,10 @@ export default class CountryPicker extends Component {
         this.setState({
           dataSource: ds.cloneWithRows(items)
         });
+      }
+      if (this.searchBar) {
+        this.searchBar.show();
+        console.log('HERE');
       }
     }
   }
@@ -262,9 +264,9 @@ export default class CountryPicker extends Component {
             <SearchBar
               ref={(ref) => this.searchBar = ref}
               data={countries}
-              handleResults={(results) =>{
+              handleResults={(results) => {
                 console.log('Country results', results);
-              } }
+              }}
               showOnLoad
             />
             <ListView
