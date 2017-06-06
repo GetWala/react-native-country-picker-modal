@@ -13,6 +13,7 @@ import { getHeightPercent } from './ratio';
 import CloseButton from './CloseButton';
 import styles from './CountryPicker.style';
 import SearchBar from 'react-native-searchbar'
+var lookup = require('country-data').lookup;
 
 let countries = null;
 let Emoji = null;
@@ -237,13 +238,35 @@ export default class CountryPicker extends Component {
     );
   }
 
-  convertCountriesToArray(){
-   let countriesFlat = _.values(countries);
-   countriesFlat = _.map(countriesFlat, (country) => {
-     delete country.flag;
-     return country;
-   });
-   return countriesFlat;
+  convertCountriesToArray() {
+    let countriesFlat = _.values(countries);
+    countriesFlat = _.map(countriesFlat, (country) => {
+      let cca2;
+      let countryLookup = _.first(lookup.countries({name:name}));
+      if(countryLookup){
+        cca2 = countryLookup.alpha2
+      }
+      return {
+        name: country.name,
+        currency: country.currency,
+        callingCode: country.callingCode,
+        cca2
+      }
+    });
+    return countriesFlat;
+  }
+
+  updateCountriesOnSearch(searchResults) {
+    items = _.map(searchResults, 'cca2');
+    console.log("items", items)
+    if (items) {
+      items = _.sortBy(items, function (cca2) {
+        return countries[cca2].name.common;
+      });
+      this.setState({
+        dataSource: ds.cloneWithRows(items)
+      });
+    }
   }
 
   render() {
