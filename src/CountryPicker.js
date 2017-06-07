@@ -239,9 +239,9 @@ export default class CountryPicker extends Component {
 
   convertCountriesToArray() {
     let countriesFlat;
-     _.mapKeys(countries, (value, key) => {
-        value.cca2 = key;
-        countriesFlat.push(value);
+    _.mapKeys(countries, (value, key) => {
+      value.cca2 = key;
+      countriesFlat.push(value);
     });
     console.log('countriesFlat', countriesFlat)
     return countriesFlat;
@@ -286,16 +286,19 @@ export default class CountryPicker extends Component {
         <Modal
           visible={this.state.modalVisible}
           onRequestClose={() => this.setState({ modalVisible: false })}
+          onShow={() => {this.setState({ dataSource: ds.cloneWithRows(cca2List) });}}
         >
           <View style={styles.modalContainer}>
             {
               this.props.closeable &&
               <CloseButton onPress={() => this.setState({ modalVisible: false })} />
             }
-            <View style={{height: getHeightPercent(10)}}>
+            <View style={{ height: getHeightPercent(10) }}>
               <SearchBar
                 ref={(ref) => this.searchBar = ref}
                 data={this.convertCountriesToArray()}
+                hideBack={true}
+                clearOnShow={true}
                 handleResults={(results) => {
                   this.updateCountriesOnSearch(results);
                 }}
