@@ -265,6 +265,13 @@ export default class CountryPicker extends Component {
     }
   }, 200, { leading: true, trailing: false });
 
+  getHeightForLetters(){
+    if(this.props.searchable){
+      return getHeightPercent(125);
+    }
+    return getHeightPercent(100);
+  }
+
   render() {
     return (
       <View>
@@ -317,10 +324,9 @@ export default class CountryPicker extends Component {
                   ({ nativeEvent: { layout: { y: offset } } }) => this.setVisibleListHeight(offset)
                 } />
             }
-
             {
               this.props.showLetters &&
-              <View style={[styles.letters]}>
+              <View style={[styles.letters, {height: this.getHeightForLetters()}]}>
                 {this.letters.map((letter, index) => this.renderLetters(letter, index))}
               </View>
             }
