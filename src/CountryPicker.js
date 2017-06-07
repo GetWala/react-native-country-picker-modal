@@ -16,6 +16,7 @@ import SearchBar from 'react-native-searchbar'
 
 let countries = null;
 let Emoji = null;
+let currentText = null;
 
 // Maybe someday android get all flags emoji
 // but for now just ios
@@ -240,8 +241,12 @@ export default class CountryPicker extends Component {
   convertCountriesToArray() {
     let countriesFlat = [];
     _.mapKeys(countries, (value, key) => {
-      value.cca2 = key;
-      countriesFlat.push(value);
+      let country = {};
+      country.cca2 = key;
+      country.name = value.name;
+      country.currency = value.currency;
+      country.callingCode = value.callingCode;
+      countriesFlat.push(country);
     });
     console.log('countriesFlat', countriesFlat)
     return countriesFlat;
@@ -250,10 +255,10 @@ export default class CountryPicker extends Component {
   updateCountriesOnSearch(searchResults) {
     items = _.map(searchResults, 'cca2');
     items = _.compact(items);
-    let currentText = this.searchBar.getValue();
+    currentText = this.searchBar.getValue();
 
     console.log('currentText', currentText);
-    if (currentText && items.length === 0) {
+    if (!currentText && items.length === 0) {
       this.setState({ dataSource: ds.cloneWithRows(cca2List) });
       return;
     }
@@ -317,7 +322,7 @@ export default class CountryPicker extends Component {
 
             {
               this.props.showLetters &&
-              <View style={styles.letters}>
+              <View style={[styles.letters, { height: getHeightPercent(10) }]}>
                 {this.letters.map((letter, index) => this.renderLetters(letter, index))}
               </View>
             }
