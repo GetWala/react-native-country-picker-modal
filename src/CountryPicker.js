@@ -248,7 +248,6 @@ export default class CountryPicker extends Component {
       country.callingCode = value.callingCode;
       countriesFlat.push(country);
     });
-    console.log('countriesFlat', countriesFlat)
     return countriesFlat;
   }
 
@@ -256,13 +255,10 @@ export default class CountryPicker extends Component {
     items = _.map(searchResults, 'cca2');
     items = _.compact(items);
     currentText = this.searchBar.getValue();
-
-    console.log('currentText', currentText);
     if (!currentText && items.length === 0) {
       this.setState({ dataSource: ds.cloneWithRows(cca2List) });
       return;
     }
-    console.log("items", items)
     if (items) {
       items = _.sortBy(items, function (cca2) {
         return countries[cca2].name.common;
@@ -305,7 +301,7 @@ export default class CountryPicker extends Component {
                 hideBack={true}
                 clearOnShow={true}
                 handleResults={(results) => {
-                  this.updateCountriesOnSearch(results);
+                  _.debounce(this.updateCountriesOnSearch(results), 500);
                 }}
                 showOnLoad
               />
