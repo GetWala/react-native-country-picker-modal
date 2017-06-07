@@ -1,9 +1,3 @@
-/**
- * react-native-country-picker
- * @author xcarpentier<contact@xaviercarpentier.com>
- * @flow
- */
-
 import React, { Component } from 'react';
 import { View, Image, TouchableOpacity, Modal, Text, ListView, Platform } from 'react-native';
 import _ from 'lodash';
@@ -12,9 +6,10 @@ import cca2List from '../data/cca2';
 import { getHeightPercent } from './ratio';
 import CloseButton from './CloseButton';
 import styles from './CountryPicker.style';
-
+import SearchBar from 'react-native-searchbar'
 let countries = null;
 let Emoji = null;
+let currentText = null;
 
 // Maybe someday android get all flags emoji
 // but for now just ios
@@ -42,7 +37,8 @@ export default class CountryPicker extends Component {
     onChange: React.PropTypes.func.isRequired,
     closeable: React.PropTypes.bool,
     children: React.PropTypes.node,
-    requiredCountries: React.PropTypes.array
+    requiredCountries: React.PropTypes.array,
+    searchable: React.PropTypes.bool
   }
   static defaultProps = {
     translation: 'eng',
@@ -52,6 +48,7 @@ export default class CountryPicker extends Component {
     modalVisible: false,
     cca2List,
     dataSource: ds.cloneWithRows(cca2List),
+    loading: false
   };
 
   onSelectCountry(cca2) {
@@ -91,6 +88,10 @@ export default class CountryPicker extends Component {
         this.setState({
           dataSource: ds.cloneWithRows(items)
         });
+      }
+      if (this.searchBar) {
+        this.searchBar.show();
+        console.log('HERE');
       }
     }
   }
@@ -232,6 +233,45 @@ export default class CountryPicker extends Component {
     );
   }
 
+  convertCountriesToArray() {
+    let countriesFlat = [];
+    _.mapKeys(countries, (value, key) => {
+      let country = {};
+      country.cca2 = key;
+      country.name = value.name;
+      country.currency = value.currency;
+      country.callingCode = value.callingCode;
+      countriesFlat.push(country);
+    });
+    return countriesFlat;
+  }
+
+  updateCountriesOnSearch = _.debounce((searchResults) => {
+    currentText = this.searchBar.getValue();
+    if (!currentText) {
+      this.setState({ loading: true });
+      this.setState({ dataSource: ds.cloneWithRows(cca2List) }, () => { this.setState({ loading: false }) });
+      return;
+    }
+    items = _.map(searchResults, 'cca2');
+    items = _.compact(items);
+    if (items) {
+      items = _.sortBy(items, function (cca2) {
+        return countries[cca2].name.common;
+      });
+      this.setState({
+        dataSource: ds.cloneWithRows(items)
+      });
+    }
+  }, 200, { leading: true, trailing: false });
+
+  getHeightForLetters(){
+    if(this.props.searchable){
+      return getHeightPercent(125);
+    }
+    return getHeightPercent(100);
+  }
+
   render() {
     return (
       <View>
@@ -250,25 +290,43 @@ export default class CountryPicker extends Component {
         <Modal
           visible={this.state.modalVisible}
           onRequestClose={() => this.setState({ modalVisible: false })}
+          onShow={() => { this.setState({ dataSource: ds.cloneWithRows(cca2List) }); }}
         >
           <View style={styles.modalContainer}>
             {
               this.props.closeable &&
               <CloseButton onPress={() => this.setState({ modalVisible: false })} />
             }
-            <ListView
-              contentContainerStyle={styles.contentContainer}
-              ref={listView => this._listView = listView}
-              dataSource={this.state.dataSource}
-              renderRow={country => this.renderCountry(country)}
-              pageSize={countries.length - 30}
-              onLayout={
-                ({ nativeEvent: { layout: { y: offset } } }) => this.setVisibleListHeight(offset)
-              } />
-
+            {this.props.searchable &&
+              <View style={{ height: getHeightPercent(10) }}>
+                <SearchBar
+                  ref={(ref) => this.searchBar = ref}
+                  data={this.convertCountriesToArray()}
+                  hideBack={true}
+                  clearOnShow={true}
+                  handleResults={(results) => {
+                    this.updateCountriesOnSearch(results);
+                  }}
+                  showOnLoad
+                />
+              </View>
+            }
+            {this.state.loading ?
+              <View>
+              </View> :
+              <ListView
+                contentContainerStyle={styles.contentContainer}
+                ref={listView => this._listView = listView}
+                dataSource={this.state.dataSource}
+                renderRow={country => this.renderCountry(country)}
+                pageSize={countries.length - 30}
+                onLayout={
+                  ({ nativeEvent: { layout: { y: offset } } }) => this.setVisibleListHeight(offset)
+                } />
+            }
             {
               this.props.showLetters &&
-              <View style={styles.letters}>
+              <View style={[styles.letters, {height: this.getHeightForLetters()}]}>
                 {this.letters.map((letter, index) => this.renderLetters(letter, index))}
               </View>
             }
