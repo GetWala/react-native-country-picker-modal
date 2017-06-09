@@ -281,7 +281,6 @@ export default class CountryPicker extends Component {
         <Modal
           visible={this.state.modalVisible}
           onRequestClose={() => this.setState({ modalVisible: false })}
-          onShow={() => { this.updateStateWithCountries(this.props.requiredCountries); }}
         >
           <View style={styles.modalContainer}>
             {
