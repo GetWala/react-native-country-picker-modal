@@ -56,7 +56,7 @@ export default class CountryPicker extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.requiredCountries.length !== nextProps.requiredCountries.length) {
+    if (nextProps.requiredCountries && this.props.requiredCountries && nextProps.requiredCountries.length !== this.props.requiredCountries.length) {
       this.updateStateWithCountries(nextProps.requiredCountries);
       if (this.props.searchable && this.searchBar) {
         this.searchBar.show();
