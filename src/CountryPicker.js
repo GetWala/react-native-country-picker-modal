@@ -56,9 +56,11 @@ export default class CountryPicker extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.updateStateWithCountries(nextProps.requiredCountries);
-    if (this.props.searchable && this.searchBar) {
-      this.searchBar.show();
+    if (nextProps.requiredCountries.length !== nextProps.requiredCountries.length) {
+      this.updateStateWithCountries(nextProps.requiredCountries);
+      if (this.props.searchable && this.searchBar) {
+        this.searchBar.show();
+      }
     }
   }
 
@@ -248,7 +250,7 @@ export default class CountryPicker extends Component {
   updateStateWithCountries(requiredCountries) {
     this.setState({ loading: true });
     if (requiredCountries && requiredCountries.length !== 0) {
-      let items = this.props.requiredCountries;
+      let items = requiredCountries;
       if (items) {
         items = _.sortBy(items, (cca2) => countries[cca2].name.common);
         this.setState({
