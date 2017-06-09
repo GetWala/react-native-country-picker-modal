@@ -234,10 +234,7 @@ export default class CountryPicker extends Component {
     let items = _.map(searchResults, 'cca2');
     items = _.compact(items);
     if (items) {
-      items = _.sortBy(items, (cca2) => countries[cca2].name.common);
-      this.setState({
-        dataSource: ds.cloneWithRows(items),
-      });
+      this.updateStateWithCountries(items);
     }
   }, 200, { leading: true, trailing: false });
 
@@ -250,7 +247,7 @@ export default class CountryPicker extends Component {
 
   updateStateWithCountries(requiredCountries) {
     this.setState({ loading: true });
-    if (requiredCountries && requiredCountries.length === 0) {
+    if (requiredCountries && requiredCountries.length !== 0) {
       let items = this.props.requiredCountries;
       if (items) {
         items = _.sortBy(items, (cca2) => countries[cca2].name.common);
