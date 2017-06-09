@@ -38,7 +38,7 @@ export default class CountryPicker extends Component {
     closeable: React.PropTypes.bool,
     children: React.PropTypes.node,
     requiredCountries: React.PropTypes.array,
-    searchable: React.PropTypes.bool
+    searchable: React.PropTypes.bool,
   }
   static defaultProps = {
     translation: 'eng',
@@ -48,8 +48,19 @@ export default class CountryPicker extends Component {
     modalVisible: false,
     cca2List,
     dataSource: ds.cloneWithRows(cca2List),
-    loading: false
+    loading: false,
   };
+
+  componentWillMount() {
+    this.updateStateWithCountries(this.props.requiredCountries);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.updateStateWithCountries(nextProps.requiredCountries);
+    if (this.props.searchable && this.searchBar) {
+      this.searchBar.show();
+    }
+  }
 
   onSelectCountry(cca2) {
     this.setState({
@@ -62,38 +73,6 @@ export default class CountryPicker extends Component {
       flag: undefined,
       name: this.getCountryName(countries[cca2]),
     });
-  }
-
-  componentWillMount() {
-    if (this.props.requiredCountries) {
-      let items = this.props.requiredCountries;
-      if (items) {
-        items = _.sortBy(items, function (cca2) {
-          return countries[cca2].name.common;
-        });
-        this.setState({
-          dataSource: ds.cloneWithRows(items)
-        });
-      }
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.requiredCountries && nextProps.requiredCountries.length !== this.props.requiredCountries.length) {
-      let items = nextProps.requiredCountries;
-      items = _.sortBy(items, function (cca2) {
-        return countries[cca2].name.common;
-      });
-      if (items) {
-        this.setState({
-          dataSource: ds.cloneWithRows(items)
-        });
-      }
-      if (this.searchBar) {
-        this.searchBar.show();
-        console.log('HERE');
-      }
-    }
   }
 
   getCountryName(country, optionalTranslation) {
@@ -220,23 +199,23 @@ export default class CountryPicker extends Component {
   }
 
   static renderPhoneSelector(cca2, optionalTransalation) {
-    const country_code = countries[cca2].callingCode;
+    const countryCode = countries[cca2].callingCode;
     return (
       <View style={styles.phoneSelector}>
         <View style={styles.phoneSelectorFlag}>
           {CountryPicker.renderImageFlag(cca2)}
         </View>
         <View style={styles.phoneSelectorText}>
-          <Text style={styles.selectorCountryNameText}>{'+ ' + country_code}</Text>
+          <Text style={styles.selectorCountryNameText}>{`+ ${countryCode}`}</Text>
         </View>
       </View>
     );
   }
 
   convertCountriesToArray() {
-    let countriesFlat = [];
+    const countriesFlat = [];
     _.mapKeys(countries, (value, key) => {
-      let country = {};
+      const country = {};
       country.cca2 = key;
       country.name = value.name;
       country.currency = value.currency;
@@ -249,27 +228,39 @@ export default class CountryPicker extends Component {
   updateCountriesOnSearch = _.debounce((searchResults) => {
     currentText = this.searchBar.getValue();
     if (!currentText) {
-      this.setState({ loading: true });
-      this.setState({ dataSource: ds.cloneWithRows(cca2List) }, () => { this.setState({ loading: false }) });
+      this.updateStateWithCountries();
       return;
     }
-    items = _.map(searchResults, 'cca2');
+    let items = _.map(searchResults, 'cca2');
     items = _.compact(items);
     if (items) {
-      items = _.sortBy(items, function (cca2) {
-        return countries[cca2].name.common;
-      });
+      items = _.sortBy(items, (cca2) => countries[cca2].name.common);
       this.setState({
-        dataSource: ds.cloneWithRows(items)
+        dataSource: ds.cloneWithRows(items),
       });
     }
   }, 200, { leading: true, trailing: false });
 
-  getHeightForLetters(){
-    if(this.props.searchable){
+  getHeightForLetters() {
+    if (this.props.searchable) {
       return getHeightPercent(125);
     }
     return getHeightPercent(100);
+  }
+
+  updateStateWithCountries(requiredCountries) {
+    this.setState({ loading: true });
+    if (requiredCountries && requiredCountries.length === 0) {
+      let items = this.props.requiredCountries;
+      if (items) {
+        items = _.sortBy(items, (cca2) => countries[cca2].name.common);
+        this.setState({
+          dataSource: ds.cloneWithRows(items),
+        }, () => this.setState({ loading: false }));
+      }
+    } else {
+      this.setState({ dataSource: ds.cloneWithRows(cca2List) }, () => this.setState({ loading: false }));
+    }
   }
 
   render() {
@@ -277,7 +268,8 @@ export default class CountryPicker extends Component {
       <View>
         <TouchableOpacity
           onPress={() => this.setState({ modalVisible: true })}
-          activeOpacity={0.7}>
+          activeOpacity={0.7}
+        >
           {
             this.props.children ?
               this.props.children
@@ -290,7 +282,7 @@ export default class CountryPicker extends Component {
         <Modal
           visible={this.state.modalVisible}
           onRequestClose={() => this.setState({ modalVisible: false })}
-          onShow={() => { this.setState({ dataSource: ds.cloneWithRows(cca2List) }); }}
+          onShow={() => { this.updateStateWithCountries(this.props.requiredCountries); }}
         >
           <View style={styles.modalContainer}>
             {
@@ -302,8 +294,8 @@ export default class CountryPicker extends Component {
                 <SearchBar
                   ref={(ref) => this.searchBar = ref}
                   data={this.convertCountriesToArray()}
-                  hideBack={true}
-                  clearOnShow={true}
+                  hideBack
+                  clearOnShow
                   handleResults={(results) => {
                     this.updateCountriesOnSearch(results);
                   }}
@@ -312,8 +304,7 @@ export default class CountryPicker extends Component {
               </View>
             }
             {this.state.loading ?
-              <View>
-              </View> :
+              null :
               <ListView
                 contentContainerStyle={styles.contentContainer}
                 ref={listView => this._listView = listView}
@@ -321,12 +312,12 @@ export default class CountryPicker extends Component {
                 renderRow={country => this.renderCountry(country)}
                 pageSize={countries.length - 30}
                 onLayout={
-                  ({ nativeEvent: { layout: { y: offset } } }) => this.setVisibleListHeight(offset)
-                } />
+                  ({ nativeEvent: { layout: { y: offset } } }) => this.setVisibleListHeight(offset)}
+              />
             }
             {
               this.props.showLetters &&
-              <View style={[styles.letters, {height: this.getHeightForLetters()}]}>
+              <View style={[styles.letters, { height: this.getHeightForLetters() }]}>
                 {this.letters.map((letter, index) => this.renderLetters(letter, index))}
               </View>
             }
