@@ -228,7 +228,9 @@ export default class CountryPicker extends Component {
   }
 
   updateCountriesOnSearch = _.debounce((searchResults) => {
-    currentText = this.searchBar.getValue();
+    if (this.searchBar) {
+      currentText = this.searchBar.getValue();
+    }
     if (!currentText) {
       this.updateStateWithCountries();
       return;
