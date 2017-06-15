@@ -201,7 +201,7 @@ export default class CountryPicker extends Component {
 
   static renderSelector(cca2, optionalTransalation) {
     if (!cca2) {
-      cca2 = 'ZA'; //this is added to render the component;
+      cca2 = 'ZA'; // this is added to render the component;
     }
     const transalation =
       optionalTransalation || CountryPicker.translation || 'eng';
@@ -310,7 +310,17 @@ export default class CountryPicker extends Component {
           onPress={() => this.setState({ modalVisible: true })}
           activeOpacity={0.7}
         >
-          <Text>{'Select a country'}</Text>
+          <Text
+            style={{
+              backgroundColor: '#1dc4bd',
+              borderRadius: 3,
+              height: 39,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            {'Select a country'}
+          </Text>
         </TouchableOpacity>
       );
     }
