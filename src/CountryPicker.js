@@ -1,12 +1,20 @@
 import React, { Component } from 'react';
-import { View, Image, TouchableOpacity, Modal, Text, ListView, Platform } from 'react-native';
+import {
+  View,
+  Image,
+  TouchableOpacity,
+  Modal,
+  Text,
+  ListView,
+  Platform,
+} from 'react-native';
 import _ from 'lodash';
 
 import cca2List from '../data/cca2';
 import { getHeightPercent } from './ratio';
 import CloseButton from './CloseButton';
 import styles from './CountryPicker.style';
-import SearchBar from 'react-native-searchbar'
+import SearchBar from 'react-native-searchbar';
 let countries = null;
 let Emoji = null;
 let currentText = null;
@@ -39,10 +47,10 @@ export default class CountryPicker extends Component {
     children: React.PropTypes.node,
     requiredCountries: React.PropTypes.array,
     searchable: React.PropTypes.bool,
-  }
+  };
   static defaultProps = {
     translation: 'eng',
-  }
+  };
 
   state = {
     modalVisible: false,
@@ -56,7 +64,11 @@ export default class CountryPicker extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.requiredCountries && this.props.requiredCountries && nextProps.requiredCountries.length !== this.props.requiredCountries.length) {
+    if (
+      nextProps.requiredCountries &&
+      this.props.requiredCountries &&
+      nextProps.requiredCountries.length !== this.props.requiredCountries.length
+    ) {
       this.updateStateWithCountries(nextProps.requiredCountries);
       if (this.props.searchable && this.searchBar) {
         this.searchBar.show();
@@ -87,12 +99,12 @@ export default class CountryPicker extends Component {
   }
 
   openModal = this.openModal.bind(this);
-  letters = _
-    .range('A'.charCodeAt(0), 'Z'.charCodeAt(0) + 1)
-    .map(n => String.fromCharCode(n).substr(0));
+  letters = _.range('A'.charCodeAt(0), 'Z'.charCodeAt(0) + 1).map(n =>
+    String.fromCharCode(n).substr(0)
+  );
 
   // dimensions of country list and window
-  itemHeight = 52;//getHeightPercent(7);
+  itemHeight = 52; // getHeightPercent(7);
   listHeight = countries.length * this.itemHeight;
 
   openModal() {
@@ -101,7 +113,8 @@ export default class CountryPicker extends Component {
 
   scrollTo(letter) {
     // find position of first country that starts with letter
-    const index = this.state.cca2List.map((country) => countries[country].name.common[0])
+    const index = this.state.cca2List
+      .map(country => countries[country].name.common[0])
       .indexOf(letter);
     if (index === -1) {
       return;
@@ -179,23 +192,35 @@ export default class CountryPicker extends Component {
   static renderFlag(cca2, itemStyle, emojiStyle, imageStyle) {
     return (
       <View style={[styles.itemCountryFlag, itemStyle]}>
-        {isEmojiable ? CountryPicker.renderEmojiFlag(cca2, emojiStyle) : CountryPicker.renderImageFlag(cca2, imageStyle)}
+        {isEmojiable
+          ? CountryPicker.renderEmojiFlag(cca2, emojiStyle)
+          : CountryPicker.renderImageFlag(cca2, imageStyle)}
       </View>
     );
   }
 
   static renderSelector(cca2, optionalTransalation) {
-    const transalation = optionalTransalation || CountryPicker.translation || 'eng';
-    const country_name = countries[cca2].name[transalation] || countries[cca2].name.common;
+    const transalation =
+      optionalTransalation || CountryPicker.translation || 'eng';
+    const country_name =
+      countries[cca2].name[transalation] || countries[cca2].name.common;
     return (
       <View style={styles.selectorControl}>
-        {CountryPicker.renderFlag(cca2, styles.selectorCountryFlag, '', styles.selectorCountryFlagImage)}
+        {CountryPicker.renderFlag(
+          cca2,
+          styles.selectorCountryFlag,
+          '',
+          styles.selectorCountryFlagImage
+        )}
         <View style={styles.selectorCountryName}>
           <Text style={styles.selectorCountryNameText}>
             {country_name}
           </Text>
         </View>
-        <Image source={require('./dropdownArrow.png')} style={styles.selectorArrow} />
+        <Image
+          source={require('./dropdownArrow.png')}
+          style={styles.selectorArrow}
+        />
       </View>
     );
   }
@@ -208,7 +233,9 @@ export default class CountryPicker extends Component {
           {CountryPicker.renderImageFlag(cca2)}
         </View>
         <View style={styles.phoneSelectorText}>
-          <Text style={styles.selectorCountryNameText}>{`+ ${countryCode}`}</Text>
+          <Text
+            style={styles.selectorCountryNameText}
+          >{`+ ${countryCode}`}</Text>
         </View>
       </View>
     );
@@ -227,20 +254,24 @@ export default class CountryPicker extends Component {
     return countriesFlat;
   }
 
-  updateCountriesOnSearch = _.debounce((searchResults) => {
-    if (this.searchBar) {
-      currentText = this.searchBar.getValue();
-    }
-    if (!currentText) {
-      this.updateStateWithCountries();
-      return;
-    }
-    let items = _.map(searchResults, 'cca2');
-    items = _.compact(items);
-    if (items) {
-      this.updateStateWithCountries(items);
-    }
-  }, 200, { leading: true, trailing: false });
+  updateCountriesOnSearch = _.debounce(
+    searchResults => {
+      if (this.searchBar) {
+        currentText = this.searchBar.getValue();
+      }
+      if (!currentText) {
+        this.updateStateWithCountries();
+        return;
+      }
+      let items = _.map(searchResults, 'cca2');
+      items = _.compact(items);
+      if (items) {
+        this.updateStateWithCountries(items);
+      }
+    },
+    200,
+    { leading: true, trailing: false }
+  );
 
   getHeightForLetters() {
     if (this.props.searchable) {
@@ -254,73 +285,87 @@ export default class CountryPicker extends Component {
     if (requiredCountries && requiredCountries.length !== 0) {
       let items = requiredCountries;
       if (items) {
-        items = _.sortBy(items, (cca2) => countries[cca2].name.common);
-        this.setState({
-          dataSource: ds.cloneWithRows(items),
-        }, () => this.setState({ loading: false }));
+        items = _.sortBy(items, cca2 => countries[cca2].name.common);
+        this.setState(
+          {
+            dataSource: ds.cloneWithRows(items),
+          },
+          () => this.setState({ loading: false })
+        );
       }
     } else {
-      this.setState({ dataSource: ds.cloneWithRows(cca2List) }, () => this.setState({ loading: false }));
+      this.setState({ dataSource: ds.cloneWithRows(cca2List) }, () =>
+        this.setState({ loading: false })
+      );
     }
   }
 
   render() {
+    if (!this.props.cca2) {
+      return (
+        <TouchableOpacity
+          onPress={() => this.setState({ modalVisible: true })}
+          activeOpacity={0.7}
+        >
+          <Text>{'Select a country'}</Text>
+        </TouchableOpacity>
+      );
+    }
     return (
       <View>
         <TouchableOpacity
           onPress={() => this.setState({ modalVisible: true })}
           activeOpacity={0.7}
         >
-          {
-            this.props.children ?
-              this.props.children
-              :
-              (<View style={styles.touchFlag}>
-                {this.props.phoneSelector ? CountryPicker.renderPhoneSelector(this.props.cca2) : CountryPicker.renderSelector(this.props.cca2)}
-              </View>)
-          }
+          {this.props.children
+            ? this.props.children
+            : <View style={styles.touchFlag}>
+              {this.props.phoneSelector
+                  ? CountryPicker.renderPhoneSelector(this.props.cca2)
+                  : CountryPicker.renderSelector(this.props.cca2)}
+            </View>}
         </TouchableOpacity>
         <Modal
           visible={this.state.modalVisible}
           onRequestClose={() => this.setState({ modalVisible: false })}
         >
           <View style={styles.modalContainer}>
-            {
-              this.props.closeable &&
-              <CloseButton onPress={() => this.setState({ modalVisible: false })} />
-            }
+            {this.props.closeable &&
+              <CloseButton
+                onPress={() => this.setState({ modalVisible: false })}
+              />}
             {this.props.searchable &&
               <View style={{ height: getHeightPercent(10) }}>
                 <SearchBar
-                  ref={(ref) => this.searchBar = ref}
+                  ref={ref => this.searchBar = ref}
                   data={this.convertCountriesToArray()}
                   hideBack
                   clearOnShow
-                  handleResults={(results) => {
+                  handleResults={results => {
                     this.updateCountriesOnSearch(results);
                   }}
                   showOnLoad
                 />
-              </View>
-            }
-            {this.state.loading ?
-              null :
-              <ListView
+              </View>}
+            {this.state.loading
+              ? null
+              : <ListView
                 contentContainerStyle={styles.contentContainer}
                 ref={listView => this._listView = listView}
                 dataSource={this.state.dataSource}
                 renderRow={country => this.renderCountry(country)}
                 pageSize={countries.length - 30}
-                onLayout={
-                  ({ nativeEvent: { layout: { y: offset } } }) => this.setVisibleListHeight(offset)}
-              />
-            }
-            {
-              this.props.showLetters &&
-              <View style={[styles.letters, { height: this.getHeightForLetters() }]}>
-                {this.letters.map((letter, index) => this.renderLetters(letter, index))}
-              </View>
-            }
+                onLayout={({ nativeEvent: { layout: { y: offset } } }) =>
+                    this.setVisibleListHeight(offset)}
+              />}
+            {this.props.showLetters &&
+              <View
+                style={[styles.letters, { height: this.getHeightForLetters() }]}
+              >
+                {this.letters.map((letter, index) =>
+                  this.renderLetters(letter, index)
+                )}
+              </View>}
           </View>
         </Modal>
       </View>
