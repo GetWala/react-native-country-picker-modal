@@ -199,7 +199,10 @@ export default class CountryPicker extends Component {
     );
   }
 
-  static renderSelector(cca2 = 'ZA', optionalTransalation) {
+  static renderSelector(cca2, optionalTransalation) {
+    if (!cca2) {
+      cca2 = 'ZA'; //this is added to render the component;
+    }
     const transalation =
       optionalTransalation || CountryPicker.translation || 'eng';
     const country_name =
