@@ -27,6 +27,7 @@
     "lodash": "4.12.0",
     "react-native-emoji": "1.2.0",
     "react-native-searchbar": "^1.10.0",
+    "react-native-vector-icons": "^4.2.0",
     "world-countries": "1.8.0"
   },
   "devDependencies": {

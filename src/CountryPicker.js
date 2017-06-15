@@ -9,12 +9,13 @@ import {
   Platform,
 } from 'react-native';
 import _ from 'lodash';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
+import SearchBar from 'react-native-searchbar';
 import cca2List from '../data/cca2';
 import { getHeightPercent } from './ratio';
 import CloseButton from './CloseButton';
 import styles from './CountryPicker.style';
-import SearchBar from 'react-native-searchbar';
+
 let countries = null;
 let Emoji = null;
 let currentText = null;
@@ -312,15 +313,13 @@ export default class CountryPicker extends Component {
         >
           <Text
             style={{
-              backgroundColor: '#1dc4bd',
-              borderRadius: 3,
-              height: 39,
-              alignItems: 'center',
-              justifyContent: 'center',
+              fontSize: 15,
+              fontFamily: 'proximanova_extrabold',
             }}
           >
             {'Select a country'}
           </Text>
+          <Icon name={'flag'} size={20} color={'#4D5B67'} />
         </TouchableOpacity>
       );
     }
