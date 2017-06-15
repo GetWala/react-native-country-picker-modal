@@ -301,7 +301,7 @@ export default class CountryPicker extends Component {
   }
 
   render() {
-    if (!this.props.cca2) {
+    if (!this.props.cca2 && !this.state.modalVisible) {
       return (
         <TouchableOpacity
           onPress={() => this.setState({ modalVisible: true })}
