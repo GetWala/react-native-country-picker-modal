@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import CountryPicker from 'react-native-country-picker-modal';
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -53,30 +54,35 @@ export default class Example extends Component {
     StatusBar.setHidden(true);
     super(props);
     this.state = {
-      cca2: 'US'
+      cca2: 'US',
+      cca2Empty: null
     };
   }
 
   render() {
     return (
-      <View style={styles.container}>
+      <View>
         <Text style={styles.welcome}>
           Welcome to Country Picker!
         </Text>
+        <View style={{height: 39}} />
+        <View style={{height: 39}} />
         <CountryPicker
           ref={(countryPicker) => { this.countryPicker = countryPicker; }}
           onChange={(value)=> this.setState({country: value, cca2: value.cca2})}
           cca2={this.state.cca2}
           closeable
         />
-        <Text style={styles.instructions}>
-          press on the flag
-        </Text>
-        <TouchableOpacity onPress={()=> this.countryPicker.openModal()}>
-          <Text style={styles.link}>
-            or click here
-          </Text>
-        </TouchableOpacity>
+        <View style={{height: 39}} />
+        <View style={{height: 39}} />
+        <CountryPicker
+          ref={(countryPicker) => { this.countryPicker = countryPicker; }}
+          onChange={(value)=> this.setState({country: value, cca2Empty: value.cca2})}
+          cca2={this.state.cca2Empty}
+          closeable
+        />
+        <View style={{height: 39}} />
+        <View style={{height: 39}} />
         {this.state.country &&
           <Text style={styles.data}>
             {JSON.stringify(this.state.country, null, 2)}
