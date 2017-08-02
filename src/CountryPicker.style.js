@@ -52,6 +52,17 @@ export default StyleSheet.create({
     borderWidth: 1 / PixelRatio.get(),
     borderColor: '#f3f4f5'
   },
+  selectorEmptyFlag: {
+    width: 39,
+    height: 30,
+    marginRight: 13,
+    marginLeft: 13,
+    borderWidth: 2,
+    borderColor: '#1dc4bd',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 3
+  },
   selectorCountryName: {
     justifyContent: 'center',
     width: getWidthPercent(100),
@@ -62,7 +73,7 @@ export default StyleSheet.create({
   selectorCountryNameText: {
     fontSize: 16,
     color: '#4D5B67',
-    fontFamily: 'proximanova_extrabold'
+    fontFamily: 'proximanova_semibold'
   },
   selectorArrow: {
     position: 'absolute',

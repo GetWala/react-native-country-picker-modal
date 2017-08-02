@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import _ from 'lodash';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import SearchBar from 'react-native-searchbar';
 import cca2List from '../data/cca2';
 import { getHeightPercent } from './ratio';
@@ -229,6 +230,25 @@ export default class CountryPicker extends Component {
     );
   }
 
+  static renderEmptySelector(){
+    return(
+      <View style={styles.selectorControl}>
+        <View style={styles.selectorEmptyFlag}>
+          <Ionicons name={'md-flag'} size={16} color={'#1dc4bd'} />
+        </View>
+        <View style={styles.selectorCountryName}>
+          <Text style={styles.selectorCountryNameText}>
+            {'Select a country'}
+          </Text>
+        </View>
+        <Image
+          source={require('./dropdownArrow.png')}
+          style={styles.selectorArrow}
+        />
+      </View>
+    )
+  }
+
   static renderPhoneSelector(cca2, optionalTransalation) {
     const countryCode = countries[cca2].callingCode;
     return (
@@ -311,15 +331,7 @@ export default class CountryPicker extends Component {
           onPress={() => this.setState({ modalVisible: true })}
           activeOpacity={0.7}
         >
-          <Text
-            style={{
-              fontSize: 15,
-              fontFamily: 'proximanova_extrabold',
-            }}
-          >
-            {'Select a country'}
-          </Text>
-          <Icon name={'flag'} size={20} color={'#4D5B67'} />
+          {CountryPicker.renderEmptySelector()}
         </TouchableOpacity>
       );
     }
@@ -333,8 +345,8 @@ export default class CountryPicker extends Component {
             ? this.props.children
             : <View style={styles.touchFlag}>
               {this.props.phoneSelector
-                  ? CountryPicker.renderPhoneSelector(this.props.cca2)
-                  : CountryPicker.renderSelector(this.props.cca2)}
+                ? CountryPicker.renderPhoneSelector(this.props.cca2)
+                : CountryPicker.renderSelector(this.props.cca2)}
             </View>}
         </TouchableOpacity>
         <Modal
@@ -343,22 +355,22 @@ export default class CountryPicker extends Component {
         >
           <View style={styles.modalContainer}>
             {this.props.closeable &&
-              <CloseButton
-                onPress={() => this.setState({ modalVisible: false })}
-              />}
+            <CloseButton
+              onPress={() => this.setState({ modalVisible: false })}
+            />}
             {this.props.searchable &&
-              <View style={{ height: getHeightPercent(10) }}>
-                <SearchBar
-                  ref={ref => this.searchBar = ref}
-                  data={this.convertCountriesToArray()}
-                  hideBack
-                  clearOnShow
-                  handleResults={results => {
-                    this.updateCountriesOnSearch(results);
-                  }}
-                  showOnLoad
-                />
-              </View>}
+            <View style={{ height: getHeightPercent(10) }}>
+              <SearchBar
+                ref={ref => this.searchBar = ref}
+                data={this.convertCountriesToArray()}
+                hideBack
+                clearOnShow
+                handleResults={results => {
+                  this.updateCountriesOnSearch(results);
+                }}
+                showOnLoad
+              />
+            </View>}
             {this.state.loading
               ? null
               : <ListView
@@ -368,16 +380,16 @@ export default class CountryPicker extends Component {
                 renderRow={country => this.renderCountry(country)}
                 pageSize={countries.length - 30}
                 onLayout={({ nativeEvent: { layout: { y: offset } } }) =>
-                    this.setVisibleListHeight(offset)}
+                  this.setVisibleListHeight(offset)}
               />}
             {this.props.showLetters &&
-              <View
-                style={[styles.letters, { height: this.getHeightForLetters() }]}
-              >
-                {this.letters.map((letter, index) =>
-                  this.renderLetters(letter, index)
-                )}
-              </View>}
+            <View
+              style={[styles.letters, { height: this.getHeightForLetters() }]}
+            >
+              {this.letters.map((letter, index) =>
+                this.renderLetters(letter, index)
+              )}
+            </View>}
           </View>
         </Modal>
       </View>
