@@ -250,6 +250,9 @@ export default class CountryPicker extends Component {
   }
 
   static renderPhoneSelector(cca2, optionalTransalation) {
+    if (!cca2) {
+      cca2 = 'ZA'; // this is added to render the component;
+    }
     const countryCode = countries[cca2].callingCode;
     return (
       <View style={styles.phoneSelector}>
@@ -271,8 +274,8 @@ export default class CountryPicker extends Component {
       const country = {};
       country.cca2 = key;
       country.name = value.name;
-      country.currency = value.currency;
-      country.callingCode = value.callingCode;
+      // country.currency = value.currency;
+      // country.callingCode = value.callingCode;
       countriesFlat.push(country);
     });
     return countriesFlat;
@@ -378,7 +381,7 @@ export default class CountryPicker extends Component {
                 ref={listView => this._listView = listView}
                 dataSource={this.state.dataSource}
                 renderRow={country => this.renderCountry(country)}
-                pageSize={countries.length - 30}
+                pageSize={1}
                 onLayout={({ nativeEvent: { layout: { y: offset } } }) =>
                   this.setVisibleListHeight(offset)}
               />}
