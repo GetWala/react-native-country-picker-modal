@@ -4,8 +4,7 @@ import { getWidthPercent, getHeightPercent } from './ratio';
 export default StyleSheet.create({
   modalContainer: {
     backgroundColor: 'white',
-    width: getWidthPercent(100),
-    height: getHeightPercent(100),
+    flex: 1
   },
   contentContainer: {
     width: getWidthPercent(100),

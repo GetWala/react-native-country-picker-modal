@@ -369,7 +369,7 @@ export default class CountryPicker extends Component {
                 onPress={() => this.setState({ modalVisible: false })}
               />}
             {this.props.searchable &&
-              <View style={{ height: getHeightPercent(10) }}>
+              <View style={{ height: 64 }}>
                 <SearchBar
                   ref={ref => this.searchBar = ref}
                   hideBack
@@ -383,18 +383,18 @@ export default class CountryPicker extends Component {
               ref={listView => this._listView = listView}
               dataSource={this.state.dataSource}
               renderRow={country => this.renderCountry(country)}
-            />
+              />
             {this.props.showLetters &&
-              <View
-                style={[styles.letters, { height: this.getHeightForLetters() }]}
-              >
-                {this.letters.map((letter, index) =>
-                  this.renderLetters(letter, index)
-                )}
-              </View>}
+                <View
+                  style={[styles.letters, { height: this.getHeightForLetters() }]}
+                >
+                  {this.letters.map((letter, index) =>
+                    this.renderLetters(letter, index)
+                  )}
+                </View>}
           </View>
         </Modal>
       </View>
-    );
+        );
   }
 }
