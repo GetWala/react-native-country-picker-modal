@@ -4,7 +4,7 @@ import { getWidthPercent, getHeightPercent } from './ratio';
 export default StyleSheet.create({
   modalContainer: {
     backgroundColor: 'white',
-    flex: 1
+    flex: 1,
   },
   contentContainer: {
     width: getWidthPercent(100),
@@ -36,7 +36,7 @@ export default StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingRight: 13,
-    position: 'relative'
+    position: 'relative',
   },
   selectorCountryFlag: {
     justifyContent: 'center',
@@ -49,7 +49,7 @@ export default StyleSheet.create({
     width: 39,
     height: 30,
     borderWidth: 1 / PixelRatio.get(),
-    borderColor: '#f3f4f5'
+    borderColor: '#f3f4f5',
   },
   selectorEmptyFlag: {
     width: 39,
@@ -60,24 +60,24 @@ export default StyleSheet.create({
     borderColor: '#1dc4bd',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 3
+    borderRadius: 3,
   },
   selectorCountryName: {
     justifyContent: 'center',
     width: getWidthPercent(100),
     height: 39,
     borderBottomWidth: 1,
-    borderColor: '#f3f4f5'
+    borderColor: '#f3f4f5',
   },
   selectorCountryNameText: {
     fontSize: 16,
     color: '#4D5B67',
-    fontFamily: 'proximanova_semibold'
+    fontFamily: 'proximanova_semibold',
   },
   selectorArrow: {
     position: 'absolute',
     right: 13,
-    top: 23
+    top: 23,
   },
   itemCountry: {
     flexDirection: 'row',
@@ -85,7 +85,7 @@ export default StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderColor: '#f3f4f5'
+    borderColor: '#f3f4f5',
   },
   itemCountryFlag: {
     justifyContent: 'center',
@@ -101,7 +101,7 @@ export default StyleSheet.create({
   countryName: {
     fontSize: 16,
     color: '#919BA0',
-    fontFamily: 'proximanova_regular'
+    fontFamily: 'proximanova_regular',
   },
   letters: {
     position: 'absolute',
@@ -122,21 +122,21 @@ export default StyleSheet.create({
   letterText: {
     textAlign: 'center',
     fontSize: getHeightPercent(2.2),
-    fontFamily: 'proximanova_regular'
+    fontFamily: 'proximanova_regular',
   },
   phoneSelector: {
     height: 39,
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   phoneSelectorFlag: {
-    marginRight: 13
+    marginRight: 13,
   },
   phoneSelectorText: {
-    paddingRight: 13
+    paddingRight: 13,
   },
   phoneSelectorArrow: {
-    paddingRight: 13
-  }
+    paddingRight: 13,
+  },
 });
