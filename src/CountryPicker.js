@@ -179,7 +179,7 @@ export default class CountryPicker extends Component {
     );
   }
 
-  renderEmojiFlag(cca2, emojiStyle) {
+  static renderEmojiFlag(cca2, emojiStyle) {
     let name = countries[cca2] ? countries[cca2].flag : '';
     return (
       <Text style={[styles.emojiFlag, emojiStyle]}>
@@ -188,7 +188,7 @@ export default class CountryPicker extends Component {
     );
   }
 
-  renderImageFlag(cca2, imageStyle) {
+  static renderImageFlag(cca2, imageStyle) {
     let source = countries[cca2] ? countries[cca2].flag : '';
     return (
       <Image
@@ -202,8 +202,8 @@ export default class CountryPicker extends Component {
     return (
       <View style={[styles.itemCountryFlag, itemStyle]}>
         {isEmojiable
-          ? this.renderEmojiFlag(cca2, emojiStyle)
-          : this.renderImageFlag(cca2, imageStyle)}
+          ? CountryPicker.renderEmojiFlag(cca2, emojiStyle)
+          : CountryPicker.renderImageFlag(cca2, imageStyle)}
       </View>
     );
   }
@@ -264,12 +264,12 @@ export default class CountryPicker extends Component {
     return (
       <View style={styles.phoneSelector}>
         <View style={styles.phoneSelectorFlag}>
-          {this.renderImageFlag(cca2)}
+          {CountryPicker.renderImageFlag(cca2)}
         </View>
         <View style={styles.phoneSelectorText}>
-          <Text
-            style={styles.selectorCountryNameText}
-          >{`+ ${countryCode}`}</Text>
+          <Text style={styles.selectorCountryNameText}>
+            {`+ ${countryCode}`}
+          </Text>
         </View>
       </View>
     );
