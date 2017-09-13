@@ -86,7 +86,9 @@ export default class CountryPicker extends Component {
       modalVisible: false,
     });
 
-    this.searchBar._clearInput();
+    if (this.props.searchable && this.searchBar) {
+      this.searchBar._clearInput();
+    }
 
     this.props.onChange({
       cca2,
