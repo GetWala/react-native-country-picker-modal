@@ -311,7 +311,9 @@ export default class CountryPicker extends Component {
     if (_.isArray(requiredCountries) && !_.isEmpty(requiredCountries)) {
       let items = requiredCountries;
       if (items) {
-        items = _.sortBy(items, cca2 => countries[cca2].name.common);
+        items = _.sortBy(items, cca2 => {
+          return _.get(countries[cca2], ['name', 'common']);
+        });
         this.setState({
           dataSource: ds.cloneWithRows(items),
           loading: false
