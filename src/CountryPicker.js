@@ -5,8 +5,8 @@ import {
   TouchableOpacity,
   Modal,
   Text,
-  ListView,
   Platform,
+  FlatList,
 } from 'react-native';
 import _ from 'lodash';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -36,8 +36,6 @@ if (isEmojiable) {
   Emoji = <View />;
 }
 
-const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-
 export default class CountryPicker extends Component {
   static propTypes = {
     cca2: React.PropTypes.string.isRequired,
@@ -56,8 +54,8 @@ export default class CountryPicker extends Component {
 
   state = {
     modalVisible: false,
-    cca2List,
-    dataSource: ds.cloneWithRows(cca2List),
+    data: cca2List,
+    letters: this.getLetters(cca2List),
     countriesFlat: this.convertCountriesToArray(),
     loading: false,
   };
@@ -98,6 +96,17 @@ export default class CountryPicker extends Component {
     });
   }
 
+  getLetters(data) {
+    return _(data)
+      .map((x, i) => ({
+        key: this.getCountryName(countries[x])[0],
+        index: i
+      }))
+      .sortBy(x => x.key)
+      .uniqBy(x => x.key)
+      .value();
+  }
+
   getCountryName(country, optionalTranslation) {
     const translation = optionalTranslation || this.props.translation || 'eng';
     return country.name[translation] || country.name.common;
@@ -108,9 +117,9 @@ export default class CountryPicker extends Component {
   }
 
   openModal = this.openModal.bind(this);
-  letters = _.range('A'.charCodeAt(0), 'Z'.charCodeAt(0) + 1).map(n =>
-    String.fromCharCode(n).substr(0)
-  );
+  // letters = _.range('A'.charCodeAt(0), 'Z'.charCodeAt(0) + 1).map(n =>
+  //   String.fromCharCode(n).substr(0)
+  // );
 
   // dimensions of country list and window
   itemHeight = 52; // getHeightPercent(7);
@@ -120,24 +129,10 @@ export default class CountryPicker extends Component {
     this.setState({ modalVisible: true });
   }
 
-  scrollTo(letter) {
-    // find position of first country that starts with letter
-    const index = this.state.cca2List
-      .map(country => countries[country].name.common[0])
-      .indexOf(letter);
-    if (index === -1) {
-      return;
-    }
-    let position = index * this.itemHeight;
-
-    // do not scroll past the end of the list
-    if (position + this.visibleListHeight > this.listHeight) {
-      position = this.listHeight - this.visibleListHeight;
-    }
-
-    // scroll
-    this._listView.scrollTo({
-      y: position,
+  scrollTo(index) {
+    this._flatList.scrollToIndex({
+      index,
+      viewPosition: 0
     });
   }
 
@@ -153,15 +148,15 @@ export default class CountryPicker extends Component {
     );
   }
 
-  renderLetters(letter, index) {
+  renderLetters(letterObj) {
     return (
       <TouchableOpacity
-        key={index}
-        onPress={() => this.scrollTo(letter)}
+        key={letterObj.key}
+        onPress={() => this.scrollTo(letterObj.index)}
         activeOpacity={0.6}
       >
         <View style={styles.letter}>
-          <Text style={styles.letterText}>{letter}</Text>
+          <Text style={styles.letterText}>{letterObj.key}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -181,7 +176,7 @@ export default class CountryPicker extends Component {
     );
   }
 
-  static renderEmojiFlag(cca2, emojiStyle) {
+  renderEmojiFlag(cca2, emojiStyle) {
     let name = countries[cca2] ? countries[cca2].flag : '';
     return (
       <Text style={[styles.emojiFlag, emojiStyle]}>
@@ -204,7 +199,7 @@ export default class CountryPicker extends Component {
     return (
       <View style={[styles.itemCountryFlag, itemStyle]}>
         {isEmojiable
-          ? CountryPicker.renderEmojiFlag(cca2, emojiStyle)
+          ? this.renderEmojiFlag(cca2, emojiStyle)
           : CountryPicker.renderImageFlag(cca2, imageStyle)}
       </View>
     );
@@ -302,9 +297,6 @@ export default class CountryPicker extends Component {
   }
 
   getHeightForLetters() {
-    if (this.props.searchable) {
-      return getHeightPercent(125);
-    }
     return getHeightPercent(100);
   }
 
@@ -314,16 +306,18 @@ export default class CountryPicker extends Component {
       let items = requiredCountries;
       if (items) {
         items = _.sortBy(items, cca2 => {
-          return _.get(countries[cca2], ['name', 'common']);
+          return _.get(countries[cca2], 'name.common');
         });
         this.setState({
-          dataSource: ds.cloneWithRows(items),
+          data: items,
+          letters: this.getLetters(items),
           loading: false
         });
       }
     } else {
       this.setState({
-        dataSource: ds.cloneWithRows(cca2List),
+        data: cca2List,
+        letters: this.getLetters(cca2List),
         loading: false
       });
     }
@@ -385,18 +379,26 @@ export default class CountryPicker extends Component {
                   allDataOnEmptySearch
                 />
               </View>}
-            <ListView
+            <FlatList
               contentContainerStyle={styles.contentContainer}
-              ref={listView => this._listView = listView}
-              dataSource={this.state.dataSource}
-              renderRow={country => this.renderCountry(country)}
+              ref={flatList => this._flatList = flatList}
+              data={this.state.data}
+              renderItem={({ item }) => this.renderCountry(item)}
+              keyExtractor={(item, index) => item}
+              getItemLayout={(data, index) => ({ length: this.itemHeight, offset: this.itemHeight * index, index })}
             />
             {this.props.showLetters &&
               <View
-                style={[styles.letters, { height: this.getHeightForLetters() }]}
+                style={[styles.letters, {
+                  height: this.getHeightForLetters(), transform:
+                  [
+                    { translateY: this.props.searchable ? 64 : 0 },
+                    { scale: 0.9 }
+                  ]
+                }]}
               >
-                {this.letters.map((letter, index) =>
-                  this.renderLetters(letter, index)
+                {this.state.letters.map((letterObj) =>
+                  this.renderLetters(letterObj)
                 )}
               </View>}
           </View>
