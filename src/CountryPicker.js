@@ -376,6 +376,7 @@ export default class CountryPicker extends Component {
                   clearOnShow
                   handleSearch={this.handleSearch}
                   showOnLoad
+                  focusOnLayout={false}
                   allDataOnEmptySearch
                 />
               </View>}
