@@ -1,24 +1,44 @@
 {
-  "extends": "airbnb",
+  "parserOptions": {
+    "ecmaVersion": 7,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true,
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "rules": {
+    "semi": 2,
+    "indent": [
+      1,
+      2,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "no-unused-vars": 1,
+    "no-undef": 1,
+    "react/jsx-uses-vars": 2,
+    "react/jsx-uses-react": "error",
+    "react/jsx-max-props-per-line": ["error", { "maximum": 3, "when": "always" }]
+  },
+  "env": {
+    "node": true,
+    "es6": true
+  },
+  "globals": {
+    "fetch": true,
+    "Promise": true
+  },
   "parser": "babel-eslint",
   "plugins": [
     "react",
     "react-native"
   ],
-  "globals": {
-    "__DEV__": false,
-    "require": false
-  },
-  "rules": {
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-    "import/no-unresolved": 0,
-    "global-require": 0,
-    "no-underscore-dangle": 0,
-    "generator-star-spacing": 0,
-    "babel/generator-star-spacing": 0,
-    "new-cap": 0,
-    "no-return-assign": 0,
-    "no-undef":"error"
-    
+  "settings": {
+    "react": {
+      "createClass": "createClass", // Regex for Component Factory to use, default to "createClass"
+      "pragma": "React" // Pragma to use, default to "React"
+    }
   }
 }

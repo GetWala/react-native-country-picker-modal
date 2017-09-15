@@ -16,6 +16,7 @@ import cca2List from '../data/cca2';
 import { getHeightPercent } from './ratio';
 import CloseButton from './CloseButton';
 import styles from './CountryPicker.style';
+import AlphabetPicker from './AlphabetPicker';
 
 let countries = null;
 let Emoji = null;
@@ -48,6 +49,7 @@ export default class CountryPicker extends Component {
     requiredCountries: React.PropTypes.array,
     searchable: React.PropTypes.bool,
   };
+
   static defaultProps = {
     translation: 'eng',
   };
@@ -327,7 +329,7 @@ export default class CountryPicker extends Component {
     if (_.isEmpty(input)) return this.updateCountriesOnSearch();
 
     let regex = new RegExp(`${input}`, `gi`)
-    let result = this.state.countriesFlat.filter(el => regex.test(el.name));
+    let result = _.filter(this.state.countriesFlat, el => regex.test(el.name));
 
     this.updateCountriesOnSearch(result);
 
@@ -398,9 +400,7 @@ export default class CountryPicker extends Component {
                   ]
                 }]}
               >
-                {this.state.letters.map((letterObj) =>
-                  this.renderLetters(letterObj)
-                )}
+                <AlphabetPicker alphabet={this.state.letters} onTouchLetter={(letterObj) => this.scrollTo(letterObj.index)} />
               </View>}
           </View>
         </Modal>
