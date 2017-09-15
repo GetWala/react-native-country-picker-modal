@@ -143,7 +143,7 @@ export default class CountryPicker extends Component {
       <TouchableOpacity
         key={index}
         onPress={() => this.onSelectCountry(country)}
-        activeOpacity={0.99}
+        activeOpacity={0.95}
       >
         {this.renderCountryDetail(country)}
       </TouchableOpacity>
@@ -348,7 +348,7 @@ export default class CountryPicker extends Component {
       );
     }
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <TouchableOpacity
           onPress={() => this.setState({ modalVisible: true })}
           activeOpacity={0.7}
@@ -383,8 +383,10 @@ export default class CountryPicker extends Component {
                 />
               </View>}
             <FlatList
-              contentContainerStyle={styles.contentContainer}
               ref={flatList => this._flatList = flatList}
+              contentContainerStyle={styles.contentContainer}
+              keyboardShouldPersistTaps={'handled'}
+              keyboardDismissMode={'on-drag'}
               data={this.state.data}
               renderItem={({ item }) => this.renderCountry(item)}
               keyExtractor={(item, index) => item}
