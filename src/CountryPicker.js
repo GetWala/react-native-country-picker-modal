@@ -307,6 +307,7 @@ export default class CountryPicker extends Component {
     if (_.isArray(requiredCountries) && !_.isEmpty(requiredCountries)) {
       let items = requiredCountries;
       if (items) {
+        items = _.filter(requiredCountries, x => _.has(countries, x));
         items = _.sortBy(items, cca2 => {
           return _.get(countries[cca2], 'name.common');
         });
