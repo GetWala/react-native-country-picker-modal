@@ -387,7 +387,6 @@ export default class CountryPicker extends Component {
               ref={flatList => this._flatList = flatList}
               contentContainerStyle={styles.contentContainer}
               keyboardShouldPersistTaps={'handled'}
-              keyboardDismissMode={'on-drag'}
               data={this.state.data}
               renderItem={({ item }) => this.renderCountry(item)}
               keyExtractor={(item, index) => item}
