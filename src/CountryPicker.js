@@ -18,10 +18,10 @@ import { getHeightPercent } from './ratio';
 import CloseButton from './CloseButton';
 import styles from './CountryPicker.style';
 import AlphabetPicker from './AlphabetPicker';
-import Emoji from './Emoji';
+import EmojiComponent from './Emoji';
 
 let countries = null;
-let Emoji = null;
+let Emoji;
 
 // Maybe someday android get all flags emoji
 // but for now just ios
@@ -31,6 +31,7 @@ const isEmojiable = Platform.OS === 'ios';
 
 if (isEmojiable) {
   countries = require('../data/countries-emoji');
+  Emoji = EmojiComponent;
 } else {
   countries = require('../data/countries');
   Emoji = <View />;
