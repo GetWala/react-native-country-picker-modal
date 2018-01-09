@@ -18,6 +18,7 @@ import { getHeightPercent } from './ratio';
 import CloseButton from './CloseButton';
 import styles from './CountryPicker.style';
 import AlphabetPicker from './AlphabetPicker';
+import Emoji from './Emoji';
 
 let countries = null;
 let Emoji = null;
@@ -30,10 +31,8 @@ const isEmojiable = Platform.OS === 'ios';
 
 if (isEmojiable) {
   countries = require('../data/countries-emoji');
-  Emoji = require('react-native-emoji').default;
 } else {
   countries = require('../data/countries');
-
   Emoji = <View />;
 }
 export default class CountryPicker extends Component {
