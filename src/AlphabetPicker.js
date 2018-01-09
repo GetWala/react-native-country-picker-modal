@@ -3,14 +3,12 @@ import React, { Component } from 'react';
 import { View, Text, PanResponder } from 'react-native';
 
 
-class LetterPicker extends Component {
-  render() {
-    return (
-      <Text style={{ fontSize: 11, fontWeight: 'bold' }}>
-        {this.props.letter.key}
-      </Text>
-    );
-  }
+function LetterPicker(props) {
+  return (
+    <Text style={{ fontSize: 11, fontWeight: 'bold' }}>
+      {props.letter.key}
+    </Text>
+  );
 }
 
 export default class AlphabetPicker extends Component {
