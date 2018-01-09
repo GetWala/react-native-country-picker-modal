@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import {
   View,
@@ -8,10 +9,10 @@ import {
   Platform,
   FlatList,
 } from 'react-native';
-import _ from 'lodash';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SearchBar from 'react-native-searchbar';
+import _ from 'lodash';
+
 import cca2List from '../data/cca2';
 import { getHeightPercent } from './ratio';
 import CloseButton from './CloseButton';
@@ -20,7 +21,6 @@ import AlphabetPicker from './AlphabetPicker';
 
 let countries = null;
 let Emoji = null;
-let currentText = null;
 
 // Maybe someday android get all flags emoji
 // but for now just ios
@@ -36,23 +36,32 @@ if (isEmojiable) {
 
   Emoji = <View />;
 }
-
 export default class CountryPicker extends Component {
-  static propTypes = {
-    cca2: React.PropTypes.string.isRequired,
-    phoneSelector: React.PropTypes.bool,
-    showLetters: React.PropTypes.bool,
-    translation: React.PropTypes.string,
-    onChange: React.PropTypes.func.isRequired,
-    closeable: React.PropTypes.bool,
-    children: React.PropTypes.node,
-    requiredCountries: React.PropTypes.array,
-    searchable: React.PropTypes.bool,
-  };
-
   static defaultProps = {
     translation: 'eng',
   };
+
+  static propTypes = {
+    cca2: PropTypes.string.isRequired,
+    phoneSelector: PropTypes.bool,
+    showLetters: PropTypes.bool,
+    translation: PropTypes.string,
+    onChange: PropTypes.func.isRequired,
+    closeable: PropTypes.bool,
+    children: PropTypes.node,
+    requiredCountries: PropTypes.array,
+    searchable: PropTypes.bool,
+  };
+
+  static renderImageFlag(cca2, imageStyle) {
+    let source = countries[cca2] ? countries[cca2].flag : '';
+    return (
+      <Image
+        style={[styles.imgStyle, imageStyle]}
+        source={{ uri: source }}
+      />
+    );
+  }
 
   state = {
     modalVisible: false,
@@ -98,6 +107,15 @@ export default class CountryPicker extends Component {
     });
   }
 
+  getCountryName(country, optionalTranslation) {
+    const translation = optionalTranslation || this.props.translation || 'eng';
+    return country.name[translation] || country.name.common;
+  }
+
+  getHeightForLetters() {
+    return getHeightPercent(100);
+  }
+
   getLetters(data) {
     return _(data)
       .map((x, i) => ({
@@ -109,16 +127,34 @@ export default class CountryPicker extends Component {
       .value();
   }
 
-  getCountryName(country, optionalTranslation) {
-    const translation = optionalTranslation || this.props.translation || 'eng';
-    return country.name[translation] || country.name.common;
-  }
-
   setVisibleListHeight(offset) {
     this.visibleListHeight = getHeightPercent(100) - offset;
   }
 
-  openModal = this.openModal.bind(this);
+  convertCountriesToArray() {
+    const countriesFlat = [];
+    _.mapKeys(countries, (value, key) => {
+      const country = {};
+      country.cca2 = key;
+      country.name = this.getCountryName(value, this.props.transalation);
+      // country.currency = value.currency;
+      // country.callingCode = value.callingCode;
+      countriesFlat.push(country);
+    });
+    return countriesFlat;
+  }
+
+  handleSearch = input => {
+    if (_.isEmpty(input)) return this.updateCountriesOnSearch();
+
+    let regex = new RegExp(`${input}`, `gi`);
+    let result = _.filter(this.state.countriesFlat, el => regex.test(el.name));
+
+    this.updateCountriesOnSearch(result);
+
+    return result;
+  }
+
   // letters = _.range('A'.charCodeAt(0), 'Z'.charCodeAt(0) + 1).map(n =>
   //   String.fromCharCode(n).substr(0)
   // );
@@ -131,11 +167,48 @@ export default class CountryPicker extends Component {
     this.setState({ modalVisible: true });
   }
 
+  openModal = this.openModal.bind(this);
+
   scrollTo(index) {
     this._flatList.scrollToIndex({
       index,
       viewPosition: 0
     });
+  }
+
+  updateCountriesOnSearch = searchResults => {
+    if (_.isEmpty(searchResults)) {
+      return this.updateStateWithCountries();
+    }
+    let items = _.map(searchResults, 'cca2');
+    items = _.compact(items);
+    if (items) {
+      this.updateStateWithCountries(items);
+    }
+  }
+
+  updateStateWithCountries(requiredCountries) {
+    this.setState({ loading: true });
+    if (_.isArray(requiredCountries) && !_.isEmpty(requiredCountries)) {
+      let items = requiredCountries;
+      if (items) {
+        items = _.filter(requiredCountries, x => _.has(countries, x));
+        items = _.sortBy(items, cca2 => {
+          return _.get(countries[cca2], 'name.common');
+        });
+        this.setState({
+          data: items,
+          letters: this.getLetters(items),
+          loading: false
+        });
+      }
+    } else {
+      this.setState({
+        data: cca2List,
+        letters: this.getLetters(cca2List),
+        loading: false
+      });
+    }
   }
 
   renderCountry(country, index) {
@@ -146,20 +219,6 @@ export default class CountryPicker extends Component {
         activeOpacity={0.95}
       >
         {this.renderCountryDetail(country)}
-      </TouchableOpacity>
-    );
-  }
-
-  renderLetters(letterObj) {
-    return (
-      <TouchableOpacity
-        key={letterObj.key}
-        onPress={() => this.scrollTo(letterObj.index)}
-        activeOpacity={0.6}
-      >
-        <View style={styles.letter}>
-          <Text style={styles.letterText}>{letterObj.key}</Text>
-        </View>
       </TouchableOpacity>
     );
   }
@@ -187,13 +246,22 @@ export default class CountryPicker extends Component {
     );
   }
 
-  static renderImageFlag(cca2, imageStyle) {
-    let source = countries[cca2] ? countries[cca2].flag : '';
+  renderEmptySelector() {
     return (
-      <Image
-        style={[styles.imgStyle, imageStyle]}
-        source={{ uri: source }}
-      />
+      <View style={styles.selectorControl}>
+        <View style={styles.selectorEmptyFlag}>
+          <Ionicons name={'md-flag'} size={16} color={'#1dc4bd'} />
+        </View>
+        <View style={styles.selectorCountryName}>
+          <Text style={styles.selectorCountryNameText}>
+            {'Select a country'}
+          </Text>
+        </View>
+        <Image
+          source={require('./dropdownArrow.png')}
+          style={styles.selectorArrow}
+        />
+      </View>
     );
   }
 
@@ -203,6 +271,39 @@ export default class CountryPicker extends Component {
         {isEmojiable
           ? this.renderEmojiFlag(cca2, emojiStyle)
           : CountryPicker.renderImageFlag(cca2, imageStyle)}
+      </View>
+    );
+  }
+
+  renderLetters(letterObj) {
+    return (
+      <TouchableOpacity
+        key={letterObj.key}
+        onPress={() => this.scrollTo(letterObj.index)}
+        activeOpacity={0.6}
+      >
+        <View style={styles.letter}>
+          <Text style={styles.letterText}>{letterObj.key}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+
+  renderPhoneSelector(cca2, optionalTransalation) {
+    if (!cca2) {
+      cca2 = 'ZA'; // this is added to render the component;
+    }
+    const countryCode = countries[cca2].callingCode;
+    return (
+      <View style={styles.phoneSelector}>
+        <View style={styles.phoneSelectorFlag}>
+          {CountryPicker.renderImageFlag(cca2)}
+        </View>
+        <View style={styles.phoneSelectorText}>
+          <Text style={styles.selectorCountryNameText}>
+            {`+ ${countryCode}`}
+          </Text>
+        </View>
       </View>
     );
   }
@@ -234,107 +335,6 @@ export default class CountryPicker extends Component {
         />
       </View>
     );
-  }
-
-  renderEmptySelector() {
-    return (
-      <View style={styles.selectorControl}>
-        <View style={styles.selectorEmptyFlag}>
-          <Ionicons name={'md-flag'} size={16} color={'#1dc4bd'} />
-        </View>
-        <View style={styles.selectorCountryName}>
-          <Text style={styles.selectorCountryNameText}>
-            {'Select a country'}
-          </Text>
-        </View>
-        <Image
-          source={require('./dropdownArrow.png')}
-          style={styles.selectorArrow}
-        />
-      </View>
-    )
-  }
-
-  renderPhoneSelector(cca2, optionalTransalation) {
-    if (!cca2) {
-      cca2 = 'ZA'; // this is added to render the component;
-    }
-    const countryCode = countries[cca2].callingCode;
-    return (
-      <View style={styles.phoneSelector}>
-        <View style={styles.phoneSelectorFlag}>
-          {CountryPicker.renderImageFlag(cca2)}
-        </View>
-        <View style={styles.phoneSelectorText}>
-          <Text style={styles.selectorCountryNameText}>
-            {`+ ${countryCode}`}
-          </Text>
-        </View>
-      </View>
-    );
-  }
-
-  convertCountriesToArray() {
-    const countriesFlat = [];
-    _.mapKeys(countries, (value, key) => {
-      const country = {};
-      country.cca2 = key;
-      country.name = this.getCountryName(value, this.props.transalation);
-      // country.currency = value.currency;
-      // country.callingCode = value.callingCode;
-      countriesFlat.push(country);
-    });
-    return countriesFlat;
-  }
-
-  updateCountriesOnSearch = searchResults => {
-    if (_.isEmpty(searchResults)) {
-      return this.updateStateWithCountries();
-    }
-    let items = _.map(searchResults, 'cca2');
-    items = _.compact(items);
-    if (items) {
-      this.updateStateWithCountries(items);
-    }
-  }
-
-  getHeightForLetters() {
-    return getHeightPercent(100);
-  }
-
-  updateStateWithCountries(requiredCountries) {
-    this.setState({ loading: true });
-    if (_.isArray(requiredCountries) && !_.isEmpty(requiredCountries)) {
-      let items = requiredCountries;
-      if (items) {
-        items = _.filter(requiredCountries, x => _.has(countries, x));
-        items = _.sortBy(items, cca2 => {
-          return _.get(countries[cca2], 'name.common');
-        });
-        this.setState({
-          data: items,
-          letters: this.getLetters(items),
-          loading: false
-        });
-      }
-    } else {
-      this.setState({
-        data: cca2List,
-        letters: this.getLetters(cca2List),
-        loading: false
-      });
-    }
-  }
-
-  handleSearch = input => {
-    if (_.isEmpty(input)) return this.updateCountriesOnSearch();
-
-    let regex = new RegExp(`${input}`, `gi`)
-    let result = _.filter(this.state.countriesFlat, el => regex.test(el.name));
-
-    this.updateCountriesOnSearch(result);
-
-    return result;
   }
 
   render() {
@@ -395,8 +395,7 @@ export default class CountryPicker extends Component {
             {this.props.showLetters &&
               <View
                 style={[styles.letters, {
-                  height: this.getHeightForLetters(), transform:
-                  [
+                  height: this.getHeightForLetters(), transform: [
                     { translateY: this.props.searchable ? 64 : 0 },
                     { scale: 0.9 }
                   ]

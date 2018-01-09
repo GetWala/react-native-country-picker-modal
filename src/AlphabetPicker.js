@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 import { View, Text, PanResponder } from 'react-native';
 
 
@@ -34,16 +35,6 @@ export default class AlphabetPicker extends Component {
     });
   }
 
-  _onTouchLetter(letter) {
-    letter && this.props.onTouchLetter && this.props.onTouchLetter(letter);
-  }
-
-  _onPanResponderEnd() {
-    requestAnimationFrame(() => {
-      this.props.onTouchEnd && this.props.onTouchEnd();
-    });
-  }
-
   _findTouchedLetter(y) {
     let top = y - (this.absContainerTop || 0);
 
@@ -57,6 +48,16 @@ export default class AlphabetPicker extends Component {
       this.absContainerTop = py;
       this.containerHeight = height;
     });
+  }
+
+  _onPanResponderEnd() {
+    requestAnimationFrame(() => {
+      this.props.onTouchEnd && this.props.onTouchEnd();
+    });
+  }
+
+  _onTouchLetter(letter) {
+    letter && this.props.onTouchLetter && this.props.onTouchLetter(letter);
   }
 
   render() {
