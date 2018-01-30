@@ -249,12 +249,12 @@ export default class CountryPicker extends Component {
 
   renderEmptySelector() {
     return (
-      <View style={styles.AUI_fullWidth}>
+      <View style={[styles.AUI_fullWidth, this.props.phoneSelector ? { borderBottomWidth: 0 } : null]}>
         <Text style={[styles.AUI_emptyLabel]}>
-          {'Select...'}
+          {this.props.phoneSelector ? 'Select country code...' : 'Select...'}
         </Text>
         <View style={styles.AUI_globe}>
-          {this.props.globeIcon}
+          {this.props.pickerIcon}
         </View>
       </View>
     );
@@ -289,16 +289,17 @@ export default class CountryPicker extends Component {
       cca2 = 'ZA'; // this is added to render the component;
     }
     const countryCode = countries[cca2].callingCode;
+    let source = countries[cca2] ? countries[cca2].flag : '';
     return (
-      <View style={styles.phoneSelector}>
-        <View style={styles.phoneSelectorFlag}>
-          {CountryPicker.renderImageFlag(cca2)}
-        </View>
-        <View style={styles.phoneSelectorText}>
-          <Text style={styles.selectorCountryNameText}>
-            {`+ ${countryCode}`}
-          </Text>
-        </View>
+      <View style={styles.AUI_phoneSelector}>
+        <Image
+          style={styles.AUI_countryFlagImage}
+          source={{ uri: source }}
+        />
+        <Text style={[styles.AUI_phoneLabel]}>
+          {`+ ${countryCode}`}
+        </Text>
+        <View style={[styles.AUI_globe, {borderRightWidth: 1, borderRightColor: '#B2B9BE'}]} />
       </View>
     );
   }
@@ -322,7 +323,7 @@ export default class CountryPicker extends Component {
           {country_name}
         </Text>
         <View style={styles.AUI_globe}>
-          {this.props.globeIcon}
+          {this.props.pickerIcon}
         </View>
       </View>
     );

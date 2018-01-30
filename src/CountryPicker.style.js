@@ -162,7 +162,7 @@ export default StyleSheet.create({
     width: 26,
     height: 26,
     position: 'absolute',
-    top: 8,
+    top: 10,
     right: 0
   },
   AUI_label: {
@@ -181,5 +181,22 @@ export default StyleSheet.create({
     width: 39,
     height: 26,
     marginRight: 13
-  }
+  },
+  AUI_phoneSelector: {
+    flexDirection: 'row',
+    width: '100%',
+    position: 'relative',
+    alignItems: 'center'
+  },
+  AUI_phoneLabel: {
+    fontSize: 16,
+    color: '#011627',
+    fontFamily: 'proximanova_semibold',
+    height: 26,
+    paddingTop: 4,
+    marginTop: 8,
+    marginBottom: 12,
+    paddingRight: 13,
+    alignItems: 'center'
+  },
 });
