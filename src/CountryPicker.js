@@ -10,6 +10,7 @@ import {
   FlatList,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import SearchBar from 'react-native-searchbar';
 import _ from 'lodash';
 
@@ -248,19 +249,13 @@ export default class CountryPicker extends Component {
 
   renderEmptySelector() {
     return (
-      <View style={styles.selectorControl}>
-        <View style={styles.selectorEmptyFlag}>
-          <Ionicons name={'md-flag'} size={16} color={'#1dc4bd'} />
+      <View style={styles.AUI_fullWidth}>
+        <Text style={[styles.AUI_emptyLabel]}>
+          {'Select...'}
+        </Text>
+        <View style={styles.AUI_globe}>
+          {this.props.globeIcon}
         </View>
-        <View style={styles.selectorCountryName}>
-          <Text style={styles.selectorCountryNameText}>
-            {'Select a country'}
-          </Text>
-        </View>
-        <Image
-          source={require('./dropdownArrow.png')}
-          style={styles.selectorArrow}
-        />
       </View>
     );
   }
@@ -316,23 +311,19 @@ export default class CountryPicker extends Component {
       optionalTransalation || this.translation || 'eng';
     const country_name =
       countries[cca2].name[transalation] || countries[cca2].name.common;
+    let source = countries[cca2] ? countries[cca2].flag : '';
     return (
-      <View style={styles.selectorControl}>
-        {this.renderFlag(
-          cca2,
-          styles.selectorCountryFlag,
-          '',
-          styles.selectorCountryFlagImage
-        )}
-        <View style={styles.selectorCountryName}>
-          <Text style={styles.selectorCountryNameText}>
-            {country_name}
-          </Text>
-        </View>
+      <View style={styles.AUI_fullWidth}>
         <Image
-          source={require('./dropdownArrow.png')}
-          style={styles.selectorArrow}
+          style={styles.AUI_countryFlagImage}
+          source={{ uri: source }}
         />
+        <Text style={styles.AUI_label}>
+          {country_name}
+        </Text>
+        <View style={styles.AUI_globe}>
+          {this.props.globeIcon}
+        </View>
       </View>
     );
   }
@@ -356,7 +347,7 @@ export default class CountryPicker extends Component {
         >
           {this.props.children
             ? this.props.children
-            : <View style={styles.touchFlag}>
+            : <View>
               {this.props.phoneSelector
                 ? this.renderPhoneSelector(this.props.cca2)
                 : this.renderSelector(this.props.cca2)}

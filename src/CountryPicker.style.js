@@ -139,4 +139,47 @@ export default StyleSheet.create({
   phoneSelectorArrow: {
     paddingRight: 13,
   },
+  AUI_fullWidth: {
+    flexDirection: 'row',
+    width: '100%',
+    position: 'relative',
+    borderBottomWidth: 1,
+    borderBottomColor: '#B2B9BE',
+    alignItems: 'center'
+  },
+  AUI_emptyLabel: {
+    fontSize: 16,
+    color: '#B2B9BE',
+    fontFamily: 'proximanova_semibold',
+    flex: 1,
+    height: 26,
+    paddingTop: 4,
+    marginTop: 8,
+    marginBottom: 12,
+    alignItems: 'center'
+  },
+  AUI_globe: {
+    width: 26,
+    height: 26,
+    position: 'absolute',
+    top: 8,
+    right: 0
+  },
+  AUI_label: {
+    fontSize: 16,
+    color: '#011627',
+    fontFamily: 'proximanova_semibold',
+    flex: 1,
+    height: 26,
+    paddingTop: 4,
+    marginTop: 8,
+    marginBottom: 12,
+    alignItems: 'center'
+  },
+  AUI_countryFlagImage: {
+    resizeMode: 'contain',
+    width: 39,
+    height: 26,
+    marginRight: 13
+  }
 });
