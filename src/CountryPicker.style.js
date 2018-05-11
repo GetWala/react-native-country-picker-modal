@@ -149,7 +149,7 @@ export default StyleSheet.create({
   },
   AUI_emptyLabel: {
     fontSize: 16,
-    color: '#B2B9BE',
+    color: '#6C7882',
     fontFamily: 'proximanova_semibold',
     flex: 1,
     height: 26,
