@@ -1,20 +1,12 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import {
-  View,
-  Image,
-  TouchableOpacity,
-  Modal,
-  Text,
-  Platform,
-  FlatList,
-} from 'react-native';
+import { View, Image, TouchableOpacity, Modal, Text, Platform, FlatList } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import SearchBar from 'react-native-searchbar';
 import _ from 'lodash';
 
-import cca2List from '../data/cca2';
+// import cca2List from '../data/cca2';
 import { getHeightPercent } from './ratio';
 import CloseButton from './CloseButton';
 import styles from './CountryPicker.style';
@@ -56,18 +48,13 @@ export default class CountryPicker extends Component {
 
   static renderImageFlag(cca2, imageStyle) {
     let source = countries[cca2] ? countries[cca2].flag : '';
-    return (
-      <Image
-        style={[styles.imgStyle, imageStyle]}
-        source={{ uri: source }}
-      />
-    );
+    return <Image style={[styles.imgStyle, imageStyle]} source={{ uri: source }} />;
   }
 
   state = {
     modalVisible: false,
-    data: cca2List,
-    letters: this.getLetters(cca2List),
+    data: [],
+    letters: this.getLetters([]),
     countriesFlat: this.convertCountriesToArray(),
     loading: false,
   };
@@ -121,7 +108,7 @@ export default class CountryPicker extends Component {
     return _(data)
       .map((x, i) => ({
         key: this.getCountryName(countries[x])[0],
-        index: i
+        index: i,
       }))
       .sortBy(x => x.key)
       .uniqBy(x => x.key)
@@ -146,22 +133,24 @@ export default class CountryPicker extends Component {
   }
 
   handleSearch = input => {
-    if (_.isEmpty(input)) return this.updateCountriesOnSearch();
+    if (_.isEmpty(input)) return this.updateStateWithCountries(this.props.requiredCountries);
 
-    let regex = new RegExp(`${input}`, `gi`);
+    let regex = new RegExp(`${input}`, 'gi');
     let result = _.filter(this.state.countriesFlat, el => regex.test(el.name));
 
     this.updateCountriesOnSearch(result);
 
     return result;
-  }
+  };
 
   // letters = _.range('A'.charCodeAt(0), 'Z'.charCodeAt(0) + 1).map(n =>
   //   String.fromCharCode(n).substr(0)
   // );
 
   // dimensions of country list and window
-  itemHeight = 52; // getHeightPercent(7);
+  itemHeight = 52;
+
+  // getHeightPercent(7);
   listHeight = countries.length * this.itemHeight;
 
   openModal() {
@@ -173,7 +162,7 @@ export default class CountryPicker extends Component {
   scrollTo(index) {
     this._flatList.scrollToIndex({
       index,
-      viewPosition: 0
+      viewPosition: 0,
     });
   }
 
@@ -183,10 +172,11 @@ export default class CountryPicker extends Component {
     }
     let items = _.map(searchResults, 'cca2');
     items = _.compact(items);
+    items = _.intersection(items, this.props.requiredCountries);
     if (items) {
       this.updateStateWithCountries(items);
     }
-  }
+  };
 
   updateStateWithCountries(requiredCountries) {
     this.setState({ loading: true });
@@ -200,14 +190,14 @@ export default class CountryPicker extends Component {
         this.setState({
           data: items,
           letters: this.getLetters(items),
-          loading: false
+          loading: false,
         });
       }
     } else {
       this.setState({
-        data: cca2List,
-        letters: this.getLetters(cca2List),
-        loading: false
+        data: [],
+        letters: this.getLetters([]),
+        loading: false,
       });
     }
   }
@@ -217,8 +207,7 @@ export default class CountryPicker extends Component {
       <TouchableOpacity
         key={index}
         onPress={() => this.onSelectCountry(country)}
-        activeOpacity={0.95}
-      >
+        activeOpacity={0.95}>
         {this.renderCountryDetail(country)}
       </TouchableOpacity>
     );
@@ -230,9 +219,7 @@ export default class CountryPicker extends Component {
       <View style={styles.itemCountry}>
         {this.renderFlag(cca2)}
         <View style={styles.itemCountryName}>
-          <Text style={styles.countryName}>
-            {this.getCountryName(country)}
-          </Text>
+          <Text style={styles.countryName}>{this.getCountryName(country)}</Text>
         </View>
       </View>
     );
@@ -275,8 +262,7 @@ export default class CountryPicker extends Component {
       <TouchableOpacity
         key={letterObj.key}
         onPress={() => this.scrollTo(letterObj.index)}
-        activeOpacity={0.6}
-      >
+        activeOpacity={0.6}>
         <View style={styles.letter}>
           <Text style={styles.letterText}>{letterObj.key}</Text>
         </View>
@@ -332,10 +318,7 @@ export default class CountryPicker extends Component {
   render() {
     if (!this.props.cca2 && !this.state.modalVisible) {
       return (
-        <TouchableOpacity
-          onPress={() => this.setState({ modalVisible: true })}
-          activeOpacity={0.7}
-        >
+        <TouchableOpacity onPress={() => this.setState({ modalVisible: true })} activeOpacity={0.7}>
           {this.renderEmptySelector()}
         </TouchableOpacity>
       );
@@ -356,17 +339,15 @@ export default class CountryPicker extends Component {
         </TouchableOpacity>
         <Modal
           visible={this.state.modalVisible}
-          onRequestClose={() => this.setState({ modalVisible: false })}
-        >
+          onRequestClose={() => this.setState({ modalVisible: false })}>
           <View style={styles.modalContainer}>
-            {this.props.closeable &&
-              <CloseButton
-                onPress={() => this.setState({ modalVisible: false })}
-              />}
-            {this.props.searchable &&
+            {this.props.closeable && (
+              <CloseButton onPress={() => this.setState({ modalVisible: false })} />
+            )}
+            {this.props.searchable && (
               <View style={{ height: 64 }}>
                 <SearchBar
-                  ref={ref => this.searchBar = ref}
+                  ref={ref => (this.searchBar = ref)}
                   hideBack
                   clearOnShow
                   handleSearch={this.handleSearch}
@@ -374,27 +355,36 @@ export default class CountryPicker extends Component {
                   focusOnLayout={false}
                   allDataOnEmptySearch
                 />
-              </View>}
+              </View>
+            )}
             <FlatList
-              ref={flatList => this._flatList = flatList}
+              ref={flatList => (this._flatList = flatList)}
               contentContainerStyle={styles.contentContainer}
               keyboardShouldPersistTaps={'handled'}
               data={this.state.data}
               renderItem={({ item }) => this.renderCountry(item)}
               keyExtractor={(item, index) => item}
-              getItemLayout={(data, index) => ({ length: this.itemHeight, offset: this.itemHeight * index, index })}
+              getItemLayout={(data, index) => ({
+                length: this.itemHeight,
+                offset: this.itemHeight * index,
+                index,
+              })}
             />
-            {this.props.showLetters &&
+            {this.props.showLetters && (
               <View
-                style={[styles.letters, {
-                  height: this.getHeightForLetters(), transform: [
-                    { translateY: this.props.searchable ? 64 : 0 },
-                    { scale: 0.9 }
-                  ]
-                }]}
-              >
-                <AlphabetPicker alphabet={this.state.letters} onTouchLetter={(letterObj) => this.scrollTo(letterObj.index)} />
-              </View>}
+                style={[
+                  styles.letters,
+                  {
+                    height: this.getHeightForLetters(),
+                    transform: [{ translateY: this.props.searchable ? 64 : 0 }, { scale: 0.9 }],
+                  },
+                ]}>
+                <AlphabetPicker
+                  alphabet={this.state.letters}
+                  onTouchLetter={letterObj => this.scrollTo(letterObj.index)}
+                />
+              </View>
+            )}
           </View>
         </Modal>
       </View>
