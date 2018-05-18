@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { View, Image, TouchableOpacity, Modal, Text, Platform, FlatList } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import SearchBar from 'react-native-searchbar';
 import _ from 'lodash';
 
@@ -235,14 +236,13 @@ export default class CountryPicker extends Component {
 
   renderEmptySelector() {
     return (
-      <View style={styles.selectorControl}>
-        <View style={styles.selectorEmptyFlag}>
-          <Ionicons name={'md-flag'} size={16} color={'#1dc4bd'} />
+      <View style={[styles.AUI_fullWidth, this.props.phoneSelector ? { borderBottomWidth: 0 } : null]}>
+        <Text style={[styles.AUI_emptyLabel]}>
+          {this.props.phoneSelector ? 'Select country code...' : 'Select...'}
+        </Text>
+        <View style={styles.AUI_globe}>
+          {this.props.pickerIcon}
         </View>
-        <View style={styles.selectorCountryName}>
-          <Text style={styles.selectorCountryNameText}>{'Select a country'}</Text>
-        </View>
-        <Image source={require('./dropdownArrow.png')} style={styles.selectorArrow} />
       </View>
     );
   }
@@ -275,12 +275,17 @@ export default class CountryPicker extends Component {
       cca2 = 'ZA'; // this is added to render the component;
     }
     const countryCode = countries[cca2].callingCode;
+    let source = countries[cca2] ? countries[cca2].flag : '';
     return (
-      <View style={styles.phoneSelector}>
-        <View style={styles.phoneSelectorFlag}>{CountryPicker.renderImageFlag(cca2)}</View>
-        <View style={styles.phoneSelectorText}>
-          <Text style={styles.selectorCountryNameText}>{`+ ${countryCode}`}</Text>
-        </View>
+      <View style={styles.AUI_phoneSelector}>
+        <Image
+          style={styles.AUI_countryFlagImage}
+          source={{ uri: source }}
+        />
+        <Text style={[styles.AUI_phoneLabel]}>
+          {`+ ${countryCode}`}
+        </Text>
+        <View style={[styles.AUI_globe, {borderRightWidth: 1, borderRightColor: '#B2B9BE'}]} />
       </View>
     );
   }
@@ -289,15 +294,23 @@ export default class CountryPicker extends Component {
     if (!cca2) {
       cca2 = 'ZA'; // this is added to render the component;
     }
-    const transalation = optionalTransalation || this.translation || 'eng';
-    const country_name = countries[cca2].name[transalation] || countries[cca2].name.common;
+    const transalation =
+      optionalTransalation || this.translation || 'eng';
+    const country_name =
+      countries[cca2].name[transalation] || countries[cca2].name.common;
+    let source = countries[cca2] ? countries[cca2].flag : '';
     return (
-      <View style={styles.selectorControl}>
-        {this.renderFlag(cca2, styles.selectorCountryFlag, '', styles.selectorCountryFlagImage)}
-        <View style={styles.selectorCountryName}>
-          <Text style={styles.selectorCountryNameText}>{country_name}</Text>
+      <View style={styles.AUI_fullWidth}>
+        <Image
+          style={styles.AUI_countryFlagImage}
+          source={{ uri: source }}
+        />
+        <Text style={styles.AUI_label}>
+          {country_name}
+        </Text>
+        <View style={styles.AUI_globe}>
+          {this.props.pickerIcon}
         </View>
-        <Image source={require('./dropdownArrow.png')} style={styles.selectorArrow} />
       </View>
     );
   }
@@ -312,16 +325,17 @@ export default class CountryPicker extends Component {
     }
     return (
       <View>
-        <TouchableOpacity onPress={() => this.setState({ modalVisible: true })} activeOpacity={0.7}>
-          {this.props.children ? (
-            this.props.children
-          ) : (
-            <View style={styles.touchFlag}>
+        <TouchableOpacity
+          onPress={() => this.setState({ modalVisible: true })}
+          activeOpacity={0.7}
+        >
+          {this.props.children
+            ? this.props.children
+            : <View>
               {this.props.phoneSelector
                 ? this.renderPhoneSelector(this.props.cca2)
                 : this.renderSelector(this.props.cca2)}
-            </View>
-          )}
+            </View>}
         </TouchableOpacity>
         <Modal
           visible={this.state.modalVisible}
