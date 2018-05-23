@@ -37,6 +37,7 @@ export default class CountryPicker extends Component {
   static propTypes = {
     cca2: PropTypes.string.isRequired,
     phoneSelector: PropTypes.bool,
+    tileSelector: PropTypes.bool,
     showLetters: PropTypes.bool,
     translation: PropTypes.string,
     onChange: PropTypes.func.isRequired,
@@ -235,6 +236,15 @@ export default class CountryPicker extends Component {
   }
 
   renderEmptySelector() {
+    if(this.props.tileSelector) {
+      return(
+        <View style={{justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%'}}>
+          {this.props.pickerIcon}
+          <View style={{height: 8}} />
+          <Text style={{fontSize: 12, color: '#20757B', fontFamily: 'proximanova_semibold'}} numberOfLines={1} ellipsizeMode={'tail'}>{'COUNTRY'}</Text>
+        </View>
+      );
+    }
     return (
       <View style={[styles.AUI_fullWidth, this.props.phoneSelector ? { borderBottomWidth: 0 } : null]}>
         <Text style={[styles.AUI_emptyLabel]}>
@@ -299,20 +309,37 @@ export default class CountryPicker extends Component {
     const country_name =
       countries[cca2].name[transalation] || countries[cca2].name.common;
     let source = countries[cca2] ? countries[cca2].flag : '';
-    return (
-      <View style={styles.AUI_fullWidth}>
-        <Image
-          style={styles.AUI_countryFlagImage}
-          source={{ uri: source }}
-        />
-        <Text style={styles.AUI_label}>
-          {country_name}
-        </Text>
-        <View style={styles.AUI_globe}>
-          {this.props.pickerIcon}
+    if(this.props.tileSelector) {
+      return(
+        <View style={{justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%'}}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Image
+              style={{width: 34.21, height: 26}}
+              source={{ uri: source }}
+            />
+            <View style={{width: 8}} />
+            {this.props.smallPickerIcon}
+          </View>
+          <View style={{height: 8}} />
+          <Text style={{fontSize: 12, color: '#20757B', fontFamily: 'proximanova_semibold', paddingHorizontal: 9}} numberOfLines={1} ellipsizeMode={'tail'}>{country_name.toUpperCase()}</Text>
         </View>
-      </View>
-    );
+      );
+    } else {
+      return (
+        <View style={styles.AUI_fullWidth}>
+          <Image
+            style={styles.AUI_countryFlagImage}
+            source={{ uri: source }}
+          />
+          <Text style={styles.AUI_label}>
+            {country_name}
+          </Text>
+          <View style={styles.AUI_globe}>
+            {this.props.pickerIcon}
+          </View>
+        </View>
+      );
+    }
   }
 
   render() {
