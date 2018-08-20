@@ -136,8 +136,7 @@ export default class CountryPicker extends Component {
   handleSearch = input => {
     if (_.isEmpty(input)) return this.updateStateWithCountries(this.props.requiredCountries);
 
-    let regex = new RegExp(`${input}`, 'gi');
-    let result = _.filter(this.state.countriesFlat, el => regex.test(el.name));
+    let result = _.filter(this.state.countriesFlat, el => el.name.indexOf(input) !== -1);
 
     this.updateCountriesOnSearch(result);
 
