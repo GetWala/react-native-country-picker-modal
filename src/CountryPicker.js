@@ -126,6 +126,7 @@ export default class CountryPicker extends Component {
       const country = {};
       country.cca2 = key;
       country.name = this.getCountryName(value, this.props.transalation);
+      country.name - _.lowerCase(country.name);
       // country.currency = value.currency;
       // country.callingCode = value.callingCode;
       countriesFlat.push(country);
@@ -136,7 +137,8 @@ export default class CountryPicker extends Component {
   handleSearch = input => {
     if (_.isEmpty(input)) return this.updateStateWithCountries(this.props.requiredCountries);
 
-    let result = _.filter(this.state.countriesFlat, el => el.name.toLowerCase().indexOf(input.toLowerCase()) !== -1);
+    const inputLow = _.lowerCase(input);
+    let result = _.filter(this.state.countriesFlat, el => el.name.indexOf(inputLow) !== -1);
 
     this.updateCountriesOnSearch(result);
 
