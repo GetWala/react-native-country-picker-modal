@@ -126,7 +126,7 @@ export default class CountryPicker extends Component {
       const country = {};
       country.cca2 = key;
       country.name = this.getCountryName(value, this.props.transalation);
-      country.name - _.lowerCase(country.name);
+      country.name = _.lowerCase(country.name);
       // country.currency = value.currency;
       // country.callingCode = value.callingCode;
       countriesFlat.push(country);
