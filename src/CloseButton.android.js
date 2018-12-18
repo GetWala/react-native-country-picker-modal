@@ -36,7 +36,7 @@ const CloseButton = (props) => (
       >
         <View style={{width: 52, height: 52, alignItems: 'center', justifyContent: 'center'}}>
           <Image
-            source={require('./android-close.png')}
+            source={require('./android-white-close.png')}
             style={styles.closeButtonImage}
           />
         </View>
