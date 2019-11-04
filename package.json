@@ -24,7 +24,7 @@
   "license": "MIT",
   "dependencies": {
     "babel-preset-react-native-stage-0": "1.0.1",
-    "lodash": "4.17.4",
+    "lodash": "4.17.13",
     "node-emoji": "^1.8.1",
     "react-native-searchbar": "^1.14.0",
     "react-native-vector-icons": "^4.5.0",
