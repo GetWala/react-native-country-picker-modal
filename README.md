@@ -58,7 +58,7 @@ class Example extends Component {
           Welcome to Country Picker !
         </Text>
         <CountryPicker
-          onChange={(value)=> this.setState({country: value, cca2: value.cca2})}
+          onSelect={(value)=> this.setState({country: value, cca2: value.cca2})}
           cca2={this.state.cca2}
           translation='eng'
         />
@@ -111,7 +111,7 @@ AppRegistry.registerComponent('example', () => Example);
 | --- | --- | --- | --- |
 | cca2 | string | \*required | code ISO 3166-1 alpha-2 (ie. FR, US, etc.)|
 | translation | string | 'eng' | The language display for the name of the country (deu, fra, hrv, ita, jpn, nld, por, rus, spa, svk,  fin, zho, cym) |
-| onChange | function | \*required | The handler when a country is selected |
+| onSelect | function | \*required | The handler when a country is selected |
 | closeable | bool | false | If true, the CountryPicker will have a close button |
 
 ## Dependencies
