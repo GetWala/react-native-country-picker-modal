@@ -1,4 +1,6 @@
-# react-native-country-picker-modal
+# NOT MAINTAINED - GETWALA NO LONGER MAINTAINS THIS. 
+
+# react-native-country-picker-modal 
 
 The best Country Picker for React Native.
 
