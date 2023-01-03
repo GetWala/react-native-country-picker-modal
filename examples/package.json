@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "react": "15.3.1",
-    "react-native": "0.32.0",
+    "react-native": "0.70.6",
     "react-native-country-picker-modal": "file:../"
   },
   "devDependencies": {
